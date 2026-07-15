@@ -1,0 +1,96 @@
+.hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: #000;
+}
+
+.hero-background {
+    position: absolute;
+    inset: 0;
+}
+
+.bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    will-change: transform, opacity;
+}
+
+/* dark overlay so cards stand out — matches the dimmed look in your screenshot */
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2;
+}
+
+.cards-row {
+    position: absolute;
+    top: 55%;
+    right: 15px;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    z-index: 10;
+}
+
+/* clips anything outside the visible slider area completely */
+.cards-viewport {
+    position: relative;
+    width: 900px;
+    height: 520px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    position: absolute;
+    width: 300px;
+    height: 460px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    will-change: transform, opacity;
+    visibility: hidden;
+}
+
+.card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* buttons sit right where the slider ends (left edge of active card) — no floating */
+.nav-buttons {
+    position: absolute;
+    bottom: -60px;
+    left: 0;
+    display: flex;
+    gap: 16px;
+    z-index: 10;
+}
+
+.nav-btn {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.nav-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.08);
+}
