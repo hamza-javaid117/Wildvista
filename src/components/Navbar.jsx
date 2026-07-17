@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
@@ -50,12 +51,12 @@ const Navbar = () => {
                         Home
                     </a>
 
-                    <a
-                        href="#destinations"
+                    <Link
+                        to="/destinations"
                         className="text-white/90 hover:text-white transition"
                     >
                         Destinations
-                    </a>
+                    </Link>
 
                     <a
                         href="#packages"

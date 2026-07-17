@@ -78,7 +78,7 @@ const getSpacing = () => {
     return 400; // desktop: ~3 cards visible
 };
 
-const AUTOPLAY_DELAY = 5000; // ⏱ ms between automatic slides, per spec
+const AUTOPLAY_DELAY = 3000; // ⏱ ms between automatic slides, per spec
 
 export default function Testimonials() {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -102,14 +102,13 @@ export default function Testimonials() {
         return () => window.removeEventListener("resize", onResize);
     }, []);
 
-    // ---------- Autoplay every 5s, paused on hover ----------
+    // ---------- Autoplay every 3s ----------
     useEffect(() => {
-        if (isHovered) return;
         const id = setInterval(() => {
             setActiveIndex((prev) => (prev + 1) % total);
         }, AUTOPLAY_DELAY);
         return () => clearInterval(id);
-    }, [isHovered, total]);
+    }, [total]);
 
     const goTo = useCallback(
         (index) => setActiveIndex(((index % total) + total) % total),
