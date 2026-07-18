@@ -4,6 +4,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { div } from "framer-motion/client";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { Link } from "react-router-dom";
+import { tours } from "../consts/TourDetails";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -262,249 +264,253 @@ export default function Destinations() {
     return (
 
         <>
-            <Navbar/> 
-          
-           
-        <div className="bg-[#0A0A0A] text-white">
-            {/* ==================== 1. HERO BANNER ==================== */}
-            <section
-                ref={heroRef}
-                className="relative h-[80vh] min-h-[560px] flex items-center justify-center overflow-hidden"
-            >
-                <img
-                    src="/images/hero.jpg"
-                    alt=""
-                    className="absolute inset-0 w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-black/60" />
+            <Navbar />
 
-                {/* floating glow shapes */}
-                <div
-                    ref={(el) => (glowRefs.current[0] = el)}
-                    className="pointer-events-none absolute -top-20 -left-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl"
-                />
-                <div
-                    ref={(el) => (glowRefs.current[1] = el)}
-                    className="pointer-events-none absolute bottom-0 right-0 w-96 h-96 bg-emerald-400/10 rounded-full blur-3xl"
-                />
 
-                {/* floating particles */}
-                {Array.from({ length: 6 }).map((_, i) => (
-                    <div
-                        key={i}
-                        ref={(el) => (particleRefs.current[i] = el)}
-                        className="pointer-events-none absolute w-1.5 h-1.5 bg-emerald-300/60 rounded-full"
-                        style={{ top: `${20 + i * 12}%`, left: `${15 + i * 14}%` }}
+            <div className="bg-[#0A0A0A] text-white">
+                {/* ==================== 1. HERO BANNER ==================== */}
+                <section
+                    ref={heroRef}
+                    className="relative h-[80vh] min-h-[560px] flex items-center justify-center overflow-hidden"
+                >
+                    <img
+                        src="/images/hero.jpg"
+                        alt=""
+                        className="absolute inset-0 w-full h-full object-cover"
                     />
-                ))}
+                    <div className="absolute inset-0 bg-black/60" />
 
-                <div className="relative z-10 max-w-3xl text-center px-6">
-                    <h1 ref={headingRef} className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-6">
-                        Explore Pakistan's Most Breathtaking Destinations
-                    </h1>
-                    <p ref={subtitleRef} className="text-gray-300 text-base sm:text-lg md:text-xl">
-                        From the majestic peaks of Hunza to the crystal lakes of Skardu, discover
-                        journeys designed for unforgettable memories.
-                    </p>
-                </div>
-            </section>
-
-            <section ref={featuredSectionRef} className="relative py-16 overflow-hidden">
-                {/* backdrop glow */}
-                <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[500px] bg-emerald-500/10 rounded-full blur-[100px]" />
-
-                {/* grid pattern */}
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.04)_0%,transparent_60%)]" />
-
-                <div className="relative z-10 max-w-5xl mx-auto px-4">
-                    {/* headline */}
-                    <h2 ref={(el) => (headlineRef.current = el)} className="text-center text-3xl sm:text-4xl font-semibold mb-14">
-                        Featured Destinations
-                    </h2>
-
-                    {/* featured card */}
+                    {/* floating glow shapes */}
                     <div
-                        className="grid md:grid-cols-2 gap-12 items-center bg-white/5 border border-white/10 rounded-2xl p-10 mb-16 backdrop-blur-lg"
-                    >
-                        <div
-                            ref={(el) => (featuredImageRef.current = el)}
-                            className="rounded-2xl overflow-hidden relative group"
-                        >
-                            <img
-                                src="/images/Hunza.jpg"
-                                alt="Hunza Valley"
-                                className="w-full h-auto rounded-2xl transition-transform duration-1000 group-hover:scale-110"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent opacity-40" />
-                        </div>
+                        ref={(el) => (glowRefs.current[0] = el)}
+                        className="pointer-events-none absolute -top-20 -left-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl"
+                    />
+                    <div
+                        ref={(el) => (glowRefs.current[1] = el)}
+                        className="pointer-events-none absolute bottom-0 right-0 w-96 h-96 bg-emerald-400/10 rounded-full blur-3xl"
+                    />
 
+                    {/* floating particles */}
+                    {Array.from({ length: 6 }).map((_, i) => (
                         <div
-                            ref={(el) => (featuredContentRef.current = el)}
-                            className="space-y-8"
-                        >
-                            <h3 className="text-3xl sm:text-4xl font-bold">
-                                Hunza Valley
-                            </h3>
-                            <p className="text-gray-300">
-                                Nestled amidst towering peaks, Hunza Valley offers serene landscapes, ancient forts, and a unique cultural experience. A paradise for trekkers and nature lovers.
-                            </p>
+                            key={i}
+                            ref={(el) => (particleRefs.current[i] = el)}
+                            className="pointer-events-none absolute w-1.5 h-1.5 bg-emerald-300/60 rounded-full"
+                            style={{ top: `${20 + i * 12}%`, left: `${15 + i * 14}%` }}
+                        />
+                    ))}
 
-                            <div className="grid grid-cols-2 gap-6 text-sm">
-                                <div>
-                                    <h4 className="font-semibold mb-2">Duration</h4>
-                                    <p className="text-gray-400">5–7 days</p>
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold mb-2">Best Time</h4>
-                                    <p className="text-gray-400">April–October</p>
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold mb-2">Difficulty</h4>
-                                    <p className="text-gray-400">Easy–Moderate</p>
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold mb-2">Region</h4>
-                                    <p className="text-gray-400">Gilgit-Baltistan</p>
-                                </div>
+                    <div className="relative z-10 max-w-3xl text-center px-6">
+                        <h1 ref={headingRef} className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-6">
+                            Explore Pakistan's Most Breathtaking Destinations
+                        </h1>
+                        <p ref={subtitleRef} className="text-gray-300 text-base sm:text-lg md:text-xl">
+                            From the majestic peaks of Hunza to the crystal lakes of Skardu, discover
+                            journeys designed for unforgettable memories.
+                        </p>
+                    </div>
+                </section>
+
+                <section ref={featuredSectionRef} className="relative py-16 overflow-hidden">
+                    {/* backdrop glow */}
+                    <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[500px] bg-emerald-500/10 rounded-full blur-[100px]" />
+
+                    {/* grid pattern */}
+                    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.04)_0%,transparent_60%)]" />
+
+                    <div className="relative z-10 max-w-5xl mx-auto px-4">
+                        {/* headline */}
+                        <h2 ref={(el) => (headlineRef.current = el)} className="text-center text-3xl sm:text-4xl font-semibold mb-14">
+                            Featured Destinations
+                        </h2>
+
+                        {/* featured card */}
+                        <div
+                            className="grid md:grid-cols-2 gap-12 items-center bg-white/5 border border-white/10 rounded-2xl p-10 mb-16 backdrop-blur-lg"
+                        >
+                            <div
+                                ref={(el) => (featuredImageRef.current = el)}
+                                className="rounded-2xl overflow-hidden relative group"
+                            >
+                                <img
+                                    src="/images/Hunza.jpg"
+                                    alt="Hunza Valley"
+                                    className="w-full h-auto rounded-2xl transition-transform duration-1000 group-hover:scale-110"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent opacity-40" />
                             </div>
 
-                            <button className="bg-white text-[#0A0A0A] px-6 py-3 rounded-full font-medium hover:bg-gray-200 transition-colors">
-                                View Package →
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* filter bar */}
-                    <div
-                        ref={(el) => (filterBarRef.current = el)}
-                        className="grid grid-cols-2 md:grid-cols-5 gap-4 p-3 bg-white/5 rounded-2xl border border-white/10 mb-10"
-                    >
-                        <input
-                            type="text"
-                            placeholder="Search destination"
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            className="col-span-2 md:col-span-2 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-emerald-400"
-                        />
-
-                        <select
-                            value={region}
-                            onChange={(e) => setRegion(e.target.value)}
-                            className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-emerald-400"
-                        >
-                            {regionOptions.map((opt) => (
-                                <option key={opt}>{opt}</option>
-                            ))}
-                        </select>
-
-                        <select
-                            value={duration}
-                            onChange={(e) => setDuration(e.target.value)}
-                            className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-emerald-400"
-                        >
-                            {durationOptions.map((opt) => (
-                                <option key={opt}>{opt}</option>
-                            ))}
-                        </select>
-
-                        <select
-                            value={level}
-                            onChange={(e) => setLevel(e.target.value)}
-                            className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-emerald-400"
-                        >
-                            {levelOptions.map((opt) => (
-                                <option key={opt}>{opt}</option>
-                            ))}
-                        </select>
-                    </div>
-
-                    {/* cards grid */}
-                    <div className="destination-grid grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {filtered.map((d) => (
                             <div
-                                key={d.id}
-                                ref={(el) => (cardRefs.current[d.id] = el)}
-                                className="group relative rounded-2xl overflow-hidden bg-white/5 border border-white/10 hover:border-emerald-400/50 hover:shadow-xl transition-all duration-700 cursor-pointer"
+                                ref={(el) => (featuredContentRef.current = el)}
+                                className="space-y-8"
                             >
-                                <div className="h-56">
-                                    <img
-                                        src={d.image}
-                                        alt={d.name}
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent opacity-40" />
-                                </div>
+                                <h3 className="text-3xl sm:text-4xl font-bold">
+                                    Hunza Valley
+                                </h3>
+                                <p className="text-gray-300">
+                                    Nestled amidst towering peaks, Hunza Valley offers serene landscapes, ancient forts, and a unique cultural experience. A paradise for trekkers and nature lovers.
+                                </p>
 
-                                <div className="p-6">
-                                    <div className="flex justify-between items-center mb-3">
-                                        <h4 className="font-bold text-lg">{d.name}</h4>
-                                        <span className="text-xs font-medium text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-md">
-                                            {d.region}
-                                        </span>
+                                <div className="grid grid-cols-2 gap-6 text-sm">
+                                    <div>
+                                        <h4 className="font-semibold mb-2">Duration</h4>
+                                        <p className="text-gray-400">5–7 days</p>
+                                    </div>
+                                    <div>
+                                        <h4 className="font-semibold mb-2">Best Time</h4>
+                                        <p className="text-gray-400">April–October</p>
+                                    </div>
+                                    <div>
+                                        <h4 className="font-semibold mb-2">Difficulty</h4>
+                                        <p className="text-gray-400">Easy–Moderate</p>
+                                    </div>
+                                    <div>
+                                        <h4 className="font-semibold mb-2">Region</h4>
+                                        <p className="text-gray-400">Gilgit-Baltistan</p>
+                                    </div>
+                                </div>
+                                {tours.map((tour) => (
+                                    <Link key={tour.slug} to={`/PackageDetails/${tour.slug}`}>
+                                        <button className="bg-white text-[#0A0A0A] px-6 py-3 rounded-full font-medium hover:bg-gray-200 transition-colors">
+                                            View Package →
+                                        </button>
+                                    </Link> 
+                                ))}
+
+                            </div>
+                        </div>
+
+                        {/* filter bar */}
+                        <div
+                            ref={(el) => (filterBarRef.current = el)}
+                            className="grid grid-cols-2 md:grid-cols-5 gap-4 p-3 bg-white/5 rounded-2xl border border-white/10 mb-10"
+                        >
+                            <input
+                                type="text"
+                                placeholder="Search destination"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                className="col-span-2 md:col-span-2 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-emerald-400"
+                            />
+
+                            <select
+                                value={region}
+                                onChange={(e) => setRegion(e.target.value)}
+                                className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-emerald-400"
+                            >
+                                {regionOptions.map((opt) => (
+                                    <option key={opt}>{opt}</option>
+                                ))}
+                            </select>
+
+                            <select
+                                value={duration}
+                                onChange={(e) => setDuration(e.target.value)}
+                                className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-emerald-400"
+                            >
+                                {durationOptions.map((opt) => (
+                                    <option key={opt}>{opt}</option>
+                                ))}
+                            </select>
+
+                            <select
+                                value={level}
+                                onChange={(e) => setLevel(e.target.value)}
+                                className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-emerald-400"
+                            >
+                                {levelOptions.map((opt) => (
+                                    <option key={opt}>{opt}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* cards grid */}
+                        <div className="destination-grid grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {filtered.map((d) => (
+                                <div
+                                    key={d.id}
+                                    ref={(el) => (cardRefs.current[d.id] = el)}
+                                    className="group relative rounded-2xl overflow-hidden bg-white/5 border border-white/10 hover:border-emerald-400/50 hover:shadow-xl transition-all duration-700 cursor-pointer"
+                                >
+                                    <div className="h-56">
+                                        <img
+                                            src={d.image}
+                                            alt={d.name}
+                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent opacity-40" />
                                     </div>
 
-                                    <p className="text-gray-400 text-sm">
-                                        {d.description.substring(0, 80)}
-                                    </p>
-
-                                    <div className="mt-4 pt-4 border-t border-white/5">
+                                    <div className="p-6">
                                         <div className="flex justify-between items-center mb-3">
-                                            <div className="flex items-center gap-1 text-emerald-400 text-sm font-medium">
-                                                <span>{d.price}</span>
-                                            </div>
-
-                                            <div className="flex items-center gap-1 text-gray-400 text-xs">
-                                                <span>{d.duration}</span>
-                                                <span>•</span>
-                                                <span>{d.level}</span>
-                                            </div>
+                                            <h4 className="font-bold text-lg">{d.name}</h4>
+                                            <span className="text-xs font-medium text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-md">
+                                                {d.region}
+                                            </span>
                                         </div>
 
-                                        <button className="w-full bg-emerald-500/10 border border-emerald-400/50 text-emerald-300 px-4 py-2 rounded-xl text-sm font-medium hover:bg-emerald-500/20 transition-colors">
-                                            View Details
-                                        </button>
+                                        <p className="text-gray-400 text-sm">
+                                            {d.description.substring(0, 80)}
+                                        </p>
+
+                                        <div className="mt-4 pt-4 border-t border-white/5">
+                                            <div className="flex justify-between items-center mb-3">
+                                                <div className="flex items-center gap-1 text-emerald-400 text-sm font-medium">
+                                                    <span>{d.price}</span>
+                                                </div>
+
+                                                <div className="flex items-center gap-1 text-gray-400 text-xs">
+                                                    <span>{d.duration}</span>
+                                                    <span>•</span>
+                                                    <span>{d.level}</span>
+                                                </div>
+                                            </div>
+
+                                            <button className="w-full bg-emerald-500/10 border border-emerald-400/50 text-emerald-300 px-4 py-2 rounded-xl text-sm font-medium hover:bg-emerald-500/20 transition-colors">
+                                                View Details
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
 
-                    {filtered.length === 0 && (
-                        <p className="text-center text-gray-400 mt-10">
-                            No destinations match your filters.
-                        </p>
-                    )}
-
-                    {/* CTA section */}
-                    <div
-                        ref={(el) => (ctaRef.current = el)}
-                        className="relative mt-20 bg-gradient-to-br from-emerald-500/10 to-white/5 rounded-2xl p-10 sm:p-16 border border-white/10 overflow-hidden"
-                    >
-                        {/* subtle glow for CTA */}
-                        <div
-                            ref={(el) => (ctaGlowRef.current = el)}
-                            className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl opacity-50"
-                        />
-
-                        <div className="relative z-10 max-w-4xl mx-auto text-center">
-                            <h3 className="text-2xl sm:text-3xl font-bold mb-4">
-                                Ready for an Adventure?
-                            </h3>
-                            <p className="text-gray-300 text-base sm:text-lg mb-8">
-                                Explore our curated travel packages and find the perfect
-                                journey for you.
+                        {filtered.length === 0 && (
+                            <p className="text-center text-gray-400 mt-10">
+                                No destinations match your filters.
                             </p>
-                            <button className="bg-white text-[#0A0A0A] px-6 py-3 rounded-full font-medium text-base sm:text-lg hover:bg-gray-200 transition-colors">
-                                View All Packages
-                            </button>
+                        )}
+
+                        {/* CTA section */}
+                        <div
+                            ref={(el) => (ctaRef.current = el)}
+                            className="relative mt-20 bg-gradient-to-br from-emerald-500/10 to-white/5 rounded-2xl p-10 sm:p-16 border border-white/10 overflow-hidden"
+                        >
+                            {/* subtle glow for CTA */}
+                            <div
+                                ref={(el) => (ctaGlowRef.current = el)}
+                                className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl opacity-50"
+                            />
+
+                            <div className="relative z-10 max-w-4xl mx-auto text-center">
+                                <h3 className="text-2xl sm:text-3xl font-bold mb-4">
+                                    Ready for an Adventure?
+                                </h3>
+                                <p className="text-gray-300 text-base sm:text-lg mb-8">
+                                    Explore our curated travel packages and find the perfect
+                                    journey for you.
+                                </p>
+                                <button className="bg-white text-[#0A0A0A] px-6 py-3 rounded-full font-medium text-base sm:text-lg hover:bg-gray-200 transition-colors">
+                                    View All Packages
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </div>
+                </section>
+            </div>
 
-        <Footer/>
+            <Footer />
 
         </>
 

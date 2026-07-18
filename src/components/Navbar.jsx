@@ -44,12 +44,12 @@ const Navbar = () => {
           shadow-xl
           "
                 >
-                    <a
-                        href="#home"
+                    <Link
+                        to="/"
                         className="text-white/90 hover:text-white transition"
                     >
                         Home
-                    </a>
+                    </Link>
 
                     <Link
                         to="/destinations"
