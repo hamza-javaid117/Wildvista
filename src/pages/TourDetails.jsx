@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { getTourBySlug } from "../consts/TourDetails";
-
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -57,12 +58,15 @@ export default function TourDetails() {
   if (!tour) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0A0A0A] text-white">
-        <p className="text-lg text-gray-400">Sorry, we couldn't find that tour.</p>
+        <p className="text-lg text-gray-400">Tour Not Found</p>
       </div>
     );
   }
 
   return (
+    <>
+       <Navbar/>
+
     <div className="bg-[#0A0A0A] text-white">
       {/* ==================== 1. HERO ==================== */}
       <section ref={heroRef} className="relative h-screen overflow-hidden flex items-end">
@@ -269,6 +273,10 @@ export default function TourDetails() {
         </motion.div>
       </section>
     </div>
+
+    <Footer/>
+
+    </>
   );
 }
 

@@ -5,7 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { tours } from "../consts/TourDetails";
 import { getTourBySlug } from "../consts/TourDetails";
-
+import Navbar from "../components/Navbar";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -64,6 +64,10 @@ export default function TourDetails() {
   }
 
   return (
+        
+    <>
+   <Navbar/> 
+
     <div className="bg-[#0A0A0A] text-white">
       {/* ==================== 1. HERO ==================== */}
       <section ref={heroRef} className="relative h-screen overflow-hidden flex items-end">
@@ -270,6 +274,7 @@ export default function TourDetails() {
         </motion.div>
       </section>
     </div>
+    </>
   );
 }
 

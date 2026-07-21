@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { div } from "framer-motion/client";
+// import { div } from "framer-motion/client";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
-import { tours } from "../consts/TourDetails";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,6 +13,7 @@ const destinationsData = [
     {
         id: 1,
         name: "Hunza Valley",
+        slug: "hunza-valley-adventure",
         region: "Gilgit-Baltistan",
         duration: "5 Days",
         price: "PKR 20000/-",
@@ -25,6 +25,7 @@ const destinationsData = [
     {
         id: 2,
         name: "Skardu",
+        slug: "skardu-lakes-escape",
         region: "Gilgit-Baltistan",
         duration: "6 Days",
         price: "PKR 25000/-",
@@ -36,6 +37,7 @@ const destinationsData = [
     {
         id: 3,
         name: "Fairy Meadows",
+        slug: "fairy-meadows-trek",
         region: "Gilgit-Baltistan",
         duration: "4 Days",
         price: "PKR 15000/-",
@@ -47,6 +49,7 @@ const destinationsData = [
     {
         id: 4,
         name: "Naran Kaghan",
+        slug: "naran-kaghan-experience",
         region: "Khyber Pakhtunkhwa",
         duration: "4 Days",
         price: "PKR 12000/-",
@@ -58,6 +61,7 @@ const destinationsData = [
     {
         id: 5,
         name: "Deosai Plains",
+        slug: "deosai-plains-expedition",
         region: "Gilgit-Baltistan",
         duration: "3 Days",
         price: "PKR 10000/-",
@@ -69,6 +73,7 @@ const destinationsData = [
     {
         id: 6,
         name: "Neelum Valley",
+        slug: "neelum-valley-retreat",
         region: "Azad Kashmir",
         duration: "5 Days",
         price: "PKR 18000/-",
@@ -80,6 +85,7 @@ const destinationsData = [
     {
         id: 7,
         name: "Passu Cones",
+        slug: "passu-cones-safari",
         region: "Gilgit-Baltistan",
         duration: "4 Days",
         price: "PKR 16000/-",
@@ -91,6 +97,7 @@ const destinationsData = [
     {
         id: 8,
         name: "Attabad Lake",
+        slug: "attabad-lake-journey",
         region: "Gilgit-Baltistan",
         duration: "3 Days",
         price: "PKR 14000/-",
@@ -104,6 +111,8 @@ const destinationsData = [
 const regionOptions = ["All Regions", ...new Set(destinationsData.map((d) => d.region))];
 const durationOptions = ["Any Duration", "3 Days", "4 Days", "5 Days", "6 Days"];
 const levelOptions = ["All Levels", "Easy", "Moderate", "Challenging"];
+
+const featuredDestination = destinationsData.find((destination) => destination.id === 1);
 
 export default function Destinations() {
     // ===== refs =====
@@ -338,7 +347,7 @@ export default function Destinations() {
                                     alt="Hunza Valley"
                                     className="w-full h-auto rounded-2xl transition-transform duration-1000 group-hover:scale-110"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent opacity-40" />
+                                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent opacity-40" />
                             </div>
 
                             <div
@@ -370,13 +379,12 @@ export default function Destinations() {
                                         <p className="text-gray-400">Gilgit-Baltistan</p>
                                     </div>
                                 </div>
-                                {tours.map((tour) => (
-                                    <Link key={tour.slug} to={`/PackageDetails/${tour.slug}`}>
-                                        <button className="bg-white text-[#0A0A0A] px-6 py-3 rounded-full font-medium hover:bg-gray-200 transition-colors">
-                                            View Package →
-                                        </button>
-                                    </Link> 
-                                ))}
+                                <Link to={`/PackageDetails/${featuredDestination.slug}`}>
+                                
+                                    <button className="bg-white text-[#0A0A0A] px-6 py-3 rounded-full font-medium hover:bg-gray-200 transition-colors">
+                                        View Package →
+                                    </button>
+                                </Link>
 
                             </div>
                         </div>
@@ -433,13 +441,13 @@ export default function Destinations() {
                                     ref={(el) => (cardRefs.current[d.id] = el)}
                                     className="group relative rounded-2xl overflow-hidden bg-white/5 border border-white/10 hover:border-emerald-400/50 hover:shadow-xl transition-all duration-700 cursor-pointer"
                                 >
-                                    <div className="h-56">
-                                        <img
-                                            src={d.image}
-                                            alt={d.name}
-                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent opacity-40" />
+<div className="relative h-56">
+                                            <img
+                                                src={d.image}
+                                                alt={d.name}
+                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                            />
+                                            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent opacity-40" />
                                     </div>
 
                                     <div className="p-6">
@@ -467,9 +475,12 @@ export default function Destinations() {
                                                 </div>
                                             </div>
 
-                                            <button className="w-full bg-emerald-500/10 border border-emerald-400/50 text-emerald-300 px-4 py-2 rounded-xl text-sm font-medium hover:bg-emerald-500/20 transition-colors">
-                                                View Details
-                                            </button>
+                                            <Link to={`/PackageDetails/${d.slug}`}>
+                                            
+                                                <button className="w-full bg-emerald-500/10 border border-emerald-400/50 text-emerald-300 px-4 py-2 rounded-xl text-sm font-medium hover:bg-emerald-500/20 transition-colors">
+                                                    View Details
+                                                </button>
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>
