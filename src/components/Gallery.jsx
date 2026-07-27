@@ -23,29 +23,49 @@ const journeyMoments = [
         location: "Hunza Valley",
         title: "Golden Sunrise",
         description: "Watch the first rays of sunlight touch the mountain peaks.",
-        image:
-            "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?q=80&w=1400&auto=format&fit=crop",
+        image: "/images/Hunza.jpg",
     },
     {
         location: "Skardu",
         title: "Crystal Blue Lakes",
         description: "Discover peaceful lakes surrounded by breathtaking mountains.",
-        image:
-            "https://images.unsplash.com/photo-1589308078059-be1415eab4c3?q=80&w=1400&auto=format&fit=crop",
+        image: "/images/Skardu.jpg",
     },
     {
         location: "Fairy Meadows",
         title: "Camp Under The Stars",
         description: "Experience unforgettable nights beneath the Milky Way.",
-        image:
-            "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=1400&auto=format&fit=crop",
+        image: "/images/Fairy Meadows.jpg",
     },
     {
-        location: "Naran",
+        location: "Naran Kaghan",
         title: "Hidden Waterfalls",
         description: "Walk through nature and discover untouched beauty.",
-        image:
-            "https://images.unsplash.com/photo-1439853949127-fa647821eba0?q=80&w=1400&auto=format&fit=crop",
+        image: "/images/Naran-Kaghan.jpg",
+    },
+    {
+        location: "Deosai Plains",
+        title: "Endless Horizons",
+        description: "Explore high-altitude plains filled with wildflowers and wildlife.",
+        image: "/images/Deosai-Plains.jpg",
+    },
+    {
+        location: "Neelum Valley",
+        title: "Lush Green Escapes",
+        description: "Relax by pristine rivers and lush alpine valleys.",
+        image: "/images/Neelum-Valley.jpg",
+    },
+    {
+        location: "Passu Cones",
+        title: "Majestic Cathedral Peaks",
+        description: "Witness the dramatic granite spires along Karakoram.",
+        image: "/images/Passu-cone.jpg",
+    },
+    {
+        location: "Attabad Lake",
+        title: "Turquoise Waters",
+        description: "Glide across vibrant turquoise waters surrounded by high cliffs.",
+        image: "/images/Attabad-Lake.jpg",
     },
 ];
 

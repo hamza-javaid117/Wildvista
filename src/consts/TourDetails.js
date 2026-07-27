@@ -44,12 +44,12 @@ export const tours = [
       { icon: "🥾", title: "Guided Hiking" },
     ],
     gallery: [
-      "https://source.unsplash.com/800x600/?hunza,mountains",
-      "https://source.unsplash.com/800x600/?hunza,lake",
-      "https://source.unsplash.com/800x600/?hunza,valley",
-      "https://source.unsplash.com/800x600/?karakoram",
-      "https://source.unsplash.com/800x600/?passu,cones",
-      "https://source.unsplash.com/800x600/?attabad,lake",
+      "/images/hunza/Hunza.jpg",
+      "/images/hunza/hunza1.jpg",
+      "/images/hunza/hunza2.jpg",
+      "/images/hunza/hunza3.jpg",
+      "/images/hunza/hunza4.jpg",
+      "/images/Hunza.jpg",
     ],
     description: [
       "Tucked between some of the world's highest peaks, Hunza Valley feels like a place suspended in time. Terraced orchards cling to mountainsides, ancient forts watch over quiet villages, and the Karakoram Highway winds through scenery that shifts from golden autumn hues to snow-white winters.",
@@ -101,12 +101,12 @@ export const tours = [
       { icon: "🥾", title: "Trekking" },
     ],
     gallery: [
-      "https://source.unsplash.com/800x600/?skardu",
-      "https://source.unsplash.com/800x600/?shangrila,lake",
-      "https://source.unsplash.com/800x600/?deosai",
-      "https://source.unsplash.com/800x600/?karakoram,peak",
-      "https://source.unsplash.com/800x600/?cold,desert",
-      "https://source.unsplash.com/800x600/?baltistan",
+      "/images/skardu/0670527e70dea0c0ded2670791de2752.jpg",
+      "/images/skardu/117e2d71abd6f270b75f98c58ec5c72b.jpg",
+      "/images/skardu/6ac7b60af5f6cfa158926c574822efe7.jpg",
+      "/images/skardu/ee9000747322be49dc908a72a52bab59.jpg",
+      "/images/skardu/eee6627eccb6c0a29c5de3bdcdca4b80.jpg",
+      "/images/Skardu.jpg",
     ],
     description: [
       "Skardu sits at the doorstep of some of the tallest mountains on Earth, yet its charm lies just as much in its stillness — glassy lakes reflecting jagged peaks, and a cold desert that feels borrowed from another planet.",
@@ -116,7 +116,7 @@ export const tours = [
   {
     slug: "fairy-meadows-trek",
     hero: {
-      coverImage: "https://source.unsplash.com/1600x900/?fairy,meadows,mountains",
+      coverImage: "/images/Fairy Meadows.jpg",
       title: "Fairy Meadows Trek",
       location: "Diamer, Gilgit-Baltistan",
       duration: "4 Days / 3 Nights",
@@ -157,12 +157,12 @@ export const tours = [
       { icon: "🔥", title: "Bonfire Nights" },
     ],
     gallery: [
-      "https://source.unsplash.com/800x600/?fairy,meadows",
-      "https://source.unsplash.com/800x600/?nanga,parbat",
-      "https://source.unsplash.com/800x600/?hiking,trail",
-      "https://source.unsplash.com/800x600/?mountain,camp",
-      "https://source.unsplash.com/800x600/?alpine,meadow",
-      "https://source.unsplash.com/800x600/?sunrise,mountains",
+      "/images/fairymedows/07fecc3112140bb623c6018d0ba6535b.jpg",
+      "/images/fairymedows/5bb74cfae396748bdbf421ecc098902f.jpg",
+      "/images/fairymedows/68688113670bf980b93140e5b34ec6c1.jpg",
+      "/images/fairymedows/d5019395e7013977a32933bc4f1cad96.jpg",
+      "/images/fairymedows/eee6627eccb6c0a29c5de3bdcdca4b80.jpg",
+      "/images/Fairy Meadows.jpg",
     ],
     description: [
       "At Fairy Meadows, the mountains feel close enough to touch. Every curve of the path opens into another spectacular view of Nanga Parbat, and every evening settles into a quiet glow of dusk over the alpine grasslands.",
@@ -172,7 +172,7 @@ export const tours = [
   {
     slug: "naran-kaghan-experience",
     hero: {
-      coverImage: "https://source.unsplash.com/1600x900/?naran,kaghan,lakes",
+      coverImage: "/images/Naran-Kaghan.jpg",
       title: "Naran Kaghan Experience",
       location: "Naran, Khyber Pakhtunkhwa",
       duration: "5 Days / 4 Nights",
@@ -213,12 +213,12 @@ export const tours = [
       { icon: "🔥", title: "Bonfire Nights" },
     ],
     gallery: [
-      "https://source.unsplash.com/800x600/?naran,kaghan",
-      "https://source.unsplash.com/800x600/?kund,lak",
-      "https://source.unsplash.com/800x600/?pine,valley",
-      "https://source.unsplash.com/800x600/?waterfall,forest",
-      "https://source.unsplash.com/800x600/?mountain,road",
-      "https://source.unsplash.com/800x600/?himalayan,river",
+      "/images/naran/e20fa207eea16c38a5282a75a8f02cd3.jpg",
+      "/images/naran/jalal-ajmal-rdTFb_PZg6M-unsplash.jpg",
+      "/images/naran/kamran-ch-hU18vj9N7Es-unsplash.jpg",
+      "/images/naran/majyd-inam-Q0u4kDHiGEs-unsplash.jpg",
+      "/images/naran/salsabeel-ehsan-Xvbyna9rvgw-unsplash.jpg",
+      "/images/naran/zeesha-Or-JBKVa154-unsplash.jpg",
     ],
     description: [
       "Naran Kaghan is one of Pakistan's most accessible mountain escapes, where every mile adds a new postcard view. The landscape changes from green forest roads to roaring rivers and glacier-fed lakes, making it perfect for first-time highland explorers.",
@@ -228,7 +228,7 @@ export const tours = [
   {
     slug: "deosai-plains-expedition",
     hero: {
-      coverImage: "https://source.unsplash.com/1600x900/?deosai,plains",
+      coverImage: "/images/Deosai-Plains.jpg",
       title: "Deosai Plains Expedition",
       location: "Deosai, Gilgit-Baltistan",
       duration: "7 Days / 6 Nights",
@@ -269,12 +269,12 @@ export const tours = [
       { icon: "🥾", title: "Plateau Trek" },
     ],
     gallery: [
-      "https://source.unsplash.com/800x600/?deosai,highlands",
-      "https://source.unsplash.com/800x600/?wildflowers,plateau",
-      "https://source.unsplash.com/800x600/?high,altitude",
-      "https://source.unsplash.com/800x600/?sky,clouds",
-      "https://source.unsplash.com/800x600/?camp,night",
-      "https://source.unsplash.com/800x600/?baltistan,plains",
+      "/images/dossaiplain/dossai1.jpg",
+      "/images/dossaiplain/dossai2.jpg",
+      "/images/dossaiplain/dossai3.jpg",
+      "/images/dossaiplain/dossai4.jpg",
+      "/images/dossaiplain/5bb74cfae396748bdbf421ecc098902f.jpg",
+      "/images/Deosai-Plains.jpg",
     ],
     description: [
       "Deosai is one of the world's highest plateaus, known for its dramatic openness and silence. Here, the horizon looks infinite, and every step across the grasslands feels like entering another world.",
@@ -284,7 +284,7 @@ export const tours = [
   {
     slug: "neelum-valley-retreat",
     hero: {
-      coverImage: "https://source.unsplash.com/1600x900/?neelum,valley",
+      coverImage: "/images/Neelum-Valley.jpg",
       title: "Neelum Valley Retreat",
       location: "Neelum, Azad Kashmir",
       duration: "4 Days / 3 Nights",
@@ -325,12 +325,12 @@ export const tours = [
       { icon: "🔥", title: "Bonfire Evenings" },
     ],
     gallery: [
-      "https://source.unsplash.com/800x600/?neelum,valley",
-      "https://source.unsplash.com/800x600/?azad,kashmir",
-      "https://source.unsplash.com/800x600/?river,road",
-      "https://source.unsplash.com/800x600/?green,mountains",
-      "https://source.unsplash.com/800x600/?waterfall,valley",
-      "https://source.unsplash.com/800x600/?cottage,landscape",
+      "/images/Neelum-Valley.jpg",
+      "/images/naran/e20fa207eea16c38a5282a75a8f02cd3.jpg",
+      "/images/naran/jalal-ajmal-rdTFb_PZg6M-unsplash.jpg",
+      "/images/naran/kamran-ch-hU18vj9N7Es-unsplash.jpg",
+      "/images/naran/majyd-inam-Q0u4kDHiGEs-unsplash.jpg",
+      "/images/naran/salsabeel-ehsan-Xvbyna9rvgw-unsplash.jpg",
     ],
     description: [
       "Neelum Valley wraps the traveler in layers of green — misty mountain roads, pine-covered slopes, and stone houses tucked into the hillside. It is the kind of place that slows the body down and sharpens the senses.",
@@ -340,7 +340,7 @@ export const tours = [
   {
     slug: "passu-cones-safari",
     hero: {
-      coverImage: "https://source.unsplash.com/1600x900/?passu,cones",
+      coverImage: "/images/Passu-cone.jpg",
       title: "Passu Cones Safari",
       location: "Passu, Gilgit-Baltistan",
       duration: "5 Days / 4 Nights",
@@ -381,12 +381,11 @@ export const tours = [
       { icon: "🔥", title: "Bonfire Nights" },
     ],
     gallery: [
-      "https://source.unsplash.com/800x600/?passu,cones,mountains",
-      "https://source.unsplash.com/800x600/?karakoram,highway",
-      "https://source.unsplash.com/800x600/?glacier,road",
-      "https://source.unsplash.com/800x600/?mountain,sharp",
-      "https://source.unsplash.com/800x600/?passu,landscape",
-      "https://source.unsplash.com/800x600/?ice,peaks",
+      "/images/passucones/2a84a53cce5d40a7eabb5b65b7ff0f28.jpg",
+      "/images/passucones/ac1fa84a5fb4c4b5bf6156e7303b137f.jpg",
+      "/images/passucones/b07783f0ab6edaa18a2b339ab6b3b355.jpg",
+      "/images/passucones/ce595dc5b99cb099b7a23da5fb68418f.jpg",
+      "/images/Passu-cone.jpg",
     ],
     description: [
       "Passu Cones are among the most recognizable mountain forms in Pakistan. Their steep faces and clean lines dominate the skyline, giving the valley a cinematic look that feels almost impossible to forget.",
@@ -396,7 +395,7 @@ export const tours = [
   {
     slug: "attabad-lake-journey",
     hero: {
-      coverImage: "https://source.unsplash.com/1600x900/?attabad,lake",
+      coverImage: "/images/Attabad-Lake.jpg",
       title: "Attabad Lake Journey",
       location: "Attabad, Hunza",
       duration: "3 Days / 2 Nights",
@@ -437,12 +436,12 @@ export const tours = [
       { icon: "🌅", title: "Golden Hour" },
     ],
     gallery: [
-      "https://source.unsplash.com/800x600/?attabad,lake,waters",
-      "https://source.unsplash.com/800x600/?turquoise,lake",
-      "https://source.unsplash.com/800x600/?hunza,drive",
-      "https://source.unsplash.com/800x600/?cliff,lake",
-      "https://source.unsplash.com/800x600/?sunset,river",
-      "https://source.unsplash.com/800x600/?hunza,glacier",
+      "/images/Attabad-Lake.jpg",
+      "/images/hunza/Hunza.jpg",
+      "/images/hunza/hunza1.jpg",
+      "/images/hunza/hunza2.jpg",
+      "/images/hunza/hunza3.jpg",
+      "/images/hunza/hunza4.jpg",
     ],
     description: [
       "Attabad Lake is one of the most visually striking stops in the north, where a reservoir of bright turquoise water sits between steep valley walls and endless mountain backdrop.",
