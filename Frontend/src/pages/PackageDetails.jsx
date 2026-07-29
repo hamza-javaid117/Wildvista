@@ -97,7 +97,7 @@ export default function TourDetails() {
               {tour.hero.shortDescription} · {tour.hero.duration}
             </p>
 
-            <Link to="/BookForm">
+            <Link to="/BookForm" state={{ slug: tour.slug }}>
               <motion.button
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -280,7 +280,7 @@ export default function TourDetails() {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-8">
               Ready for your next adventure?
             </h2>
-            <Link to="/BookForm">
+            <Link to="/BookForm" state={{ slug: tour.slug }}>
               <motion.button
                 type="button"
                 whileHover={{ y: -3, boxShadow: "0 0 30px rgba(16,185,129,0.5)" }}

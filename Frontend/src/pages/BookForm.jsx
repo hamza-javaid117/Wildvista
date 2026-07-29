@@ -3,26 +3,27 @@ import { useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import BookingForm from "../components/BookingForm";
-import { tours } from "../consts/TourDetails";
+import { tours, getTourBySlug } from "../consts/TourDetails";
 
 export default function BookForm() {
   const location = useLocation();
 
-  console.log("Location State:", location.state);
-  console.log("Passed Tour:", location.state?.tours);
+  const passedTour = location.state?.tour;
+  const passedSlug = location.state?.slug;
+  const resolvedTour = passedTour || (passedSlug ? getTourBySlug(passedSlug) : null);
 
-  // Pick tour passed via navigation state, or fallback to first tour in data
-  const passedTour = location.state?.tours;
-  const defaultTour = tours && tours.length > 0 ? tours[0] : {
-    id: "123",
-    title: "Hunza Valley Adventure",
-    price: 45000,
-    duration: "5 Days",
-    location: "Hunza, Gilgit-Baltistan",
+  const selectedTourData = resolvedTour || (tours && tours.length > 0 ? tours[0] : null);
+  const defaultTour = selectedTourData || {
+    slug: "hunza-valley-adventure",
+    hero: {
+      title: "Hunza Valley Adventure",
+      location: "Hunza, Gilgit-Baltistan",
+      duration: "5 Days",
+    },
+    pricing: { single: 450 },
   };
 
-
-  const selectedTour = passedTour || {
+  const selectedTour = {
     id: defaultTour.slug || "123",
     title: defaultTour.hero?.title || defaultTour.title || "Hunza Valley Adventure",
     price: defaultTour.pricing?.single ? defaultTour.pricing.single * 100 : 45000,
