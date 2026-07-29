@@ -8,8 +8,11 @@ import { tours } from "../consts/TourDetails";
 export default function BookForm() {
   const location = useLocation();
 
+  console.log("Location State:", location.state);
+  console.log("Passed Tour:", location.state?.tours);
+
   // Pick tour passed via navigation state, or fallback to first tour in data
-  const passedTour = location.state?.tour;
+  const passedTour = location.state?.tours;
   const defaultTour = tours && tours.length > 0 ? tours[0] : {
     id: "123",
     title: "Hunza Valley Adventure",
@@ -17,6 +20,7 @@ export default function BookForm() {
     duration: "5 Days",
     location: "Hunza, Gilgit-Baltistan",
   };
+
 
   const selectedTour = passedTour || {
     id: defaultTour.slug || "123",

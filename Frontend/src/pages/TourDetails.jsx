@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { getTourBySlug } from "../consts/TourDetails";
+import { getTourBySlug, tours } from "../consts/TourDetails";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
@@ -278,7 +278,9 @@ export default function TourDetails() {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-8">
               Ready for your next adventure?
             </h2>
-            <Link to="/BookForm">
+            <Link to="/BookForm"
+              state={{ tours }}
+            >
               <motion.button
                 whileHover={{ y: -3, boxShadow: "0 0 30px rgba(16,185,129,0.5)" }}
                 className="rounded-full bg-emerald-500 text-black font-semibold px-10 py-4"
