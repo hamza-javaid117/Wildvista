@@ -11,7 +11,6 @@ class ApiResponse {
     }
 }
 
-export { ApiResponse };
+export default ApiResponse;
 
-
-//Used for when API succesfully return data
+//Used for when API successfully returns data

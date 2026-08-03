@@ -59,6 +59,29 @@ export default function PersonalInfo({ register, errors }) {
           )}
         </div>
 
+        {/* Email */}
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-300">
+            Email Address
+          </label>
+          <input
+            type="email"
+            placeholder="e.g. ali@example.com"
+            {...register("customer.email", {
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "Enter a valid email address",
+              },
+            })}
+            className={`w-full rounded-xl bg-white/5 border ${
+              errors?.customer?.email ? "border-red-500 focus:ring-red-500" : "border-white/15 focus:border-emerald-500 focus:ring-emerald-500"
+            } px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-1 transition`}
+          />
+          {errors?.customer?.email && (
+            <p className="text-xs text-red-400 mt-1">⚠️ {errors.customer.email.message}</p>
+          )}
+        </div>
+
         {/* Emergency Contact */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-300">
@@ -80,6 +103,51 @@ export default function PersonalInfo({ register, errors }) {
           />
           {errors?.customer?.emergencyContact && (
             <p className="text-xs text-red-400 mt-1">⚠️ {errors.customer.emergencyContact.message}</p>
+          )}
+        </div>
+
+        {/* CNIC Number */}
+        <div className="md:col-span-2 space-y-2">
+          <label className="block text-sm font-medium text-gray-300">
+            CNIC Number <span className="text-emerald-400">*</span>
+          </label>
+          <input
+            type="text"
+            placeholder="e.g. 61101-1234567-8"
+            {...register("customer.cnic", {
+              required: "CNIC Number is required",
+              pattern: {
+                value: /^\d{5}-\d{7}-\d{1}$/,
+                message: "Enter a valid CNIC number in the format 61101-1234567-8",
+              },
+            })}
+            className={`w-full rounded-xl bg-white/5 border ${
+              errors?.customer?.cnic ? "border-red-500 focus:ring-red-500" : "border-white/15 focus:border-emerald-500 focus:ring-emerald-500"
+            } px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-1 transition`}
+          />
+          {errors?.customer?.cnic && (
+            <p className="text-xs text-red-400 mt-1">⚠️ {errors.customer.cnic.message}</p>
+          )}
+        </div>
+
+        {/* Password */}
+        <div className="md:col-span-2 space-y-2">
+          <label className="block text-sm font-medium text-gray-300">
+            Password <span className="text-emerald-400">*</span>
+          </label>
+          <input
+            type="password"
+            placeholder="Create a secure password"
+            {...register("customer.password", {
+              required: "Password is required",
+              minLength: { value: 6, message: "Password must be at least 6 characters" },
+            })}
+            className={`w-full rounded-xl bg-white/5 border ${
+              errors?.customer?.password ? "border-red-500 focus:ring-red-500" : "border-white/15 focus:border-emerald-500 focus:ring-emerald-500"
+            } px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-1 transition`}
+          />
+          {errors?.customer?.password && (
+            <p className="text-xs text-red-400 mt-1">⚠️ {errors.customer.password.message}</p>
           )}
         </div>
       </div>

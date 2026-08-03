@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import PersonalInfo from "./PersonalInfo";
 import TourDetails from "./TourDetails";
 import TravelerDetails from "./TravelerDetails";
@@ -9,8 +9,12 @@ import ExtraServices from "./ExtraServices";
 import BookingSummary from "./BookingSummary";
 import useBookingPrice from "../hooks/useBookingPrice";
 import { ROOM_OPTIONS, EXTRA_SERVICES } from "../consts/BookingOption";
+import { registerUser, loginUser as loginAuthUser } from "../api/authApi";
+import { AUTH_STORAGE_KEY, USER_STORAGE_KEY } from "../utils/auth";
 
 export default function BookingForm({ tour }) {
+  const navigate = useNavigate();
+
   const defaultTour = tour || {
     id: "hunza-123",
     title: "Hunza Valley Adventure",
@@ -32,7 +36,10 @@ export default function BookingForm({ tour }) {
       customer: {
         name: "",
         phone: "",
+        email: "",
         emergencyContact: "",
+        cnic: "",
+        password: "",
       },
       booking: {
         travelDate: "",
@@ -78,49 +85,57 @@ export default function BookingForm({ tour }) {
     setSubmitError(null);
     setSubmitSuccess(null);
 
-    // Format payload strictly matching backend requirements
-    const bookingPayload = {
-      customer: {
-        name: data.customer.name,
-        phone: data.customer.phone,
-        emergencyContact: data.customer.emergencyContact,
-      },
-      tour: {
-        id: defaultTour.id || defaultTour.slug || "hunza-123",
-        title: defaultTour.title || defaultTour.hero?.title || "Hunza Valley Adventure",
-      },
-      travelers: data.travelers.slice(0, Number(data.booking.adults) || 1).map((t) => ({
-        name: t.name,
-        cnic: t.cnic,
-        age: Number(t.age),
-        gender: t.gender,
-      })),
-      booking: {
-        travelDate: data.booking.travelDate,
-        pickupCity: data.booking.pickupCity,
-        adults: Number(data.booking.adults),
-        children: Number(data.booking.children || 0),
-        infants: Number(data.booking.infants || 0),
-      },
-      roomType: data.roomType,
-      extras: data.extras || [],
-      specialRequest: data.specialRequest || "",
+    const registrationPayload = {
+      name: data.customer.name,
+      phone: data.customer.phone,
+      cnic: data.customer.cnic,
+      email: data.customer.email || "",
+      password: data.customer.password,
     };
 
     try {
-      // POST request to backend API endpoint
-      const response = await axios.post("/api/bookings", bookingPayload);
+      const registerResponse = await registerUser(registrationPayload);
+
+      if (!registerResponse?.success) {
+        throw new Error(registerResponse?.message || "Registration failed.");
+      }
+
+      const loginPayload = {
+        password: data.customer.password,
+        ...(data.customer.cnic ? { cnic: data.customer.cnic } : {}),
+        ...(data.customer.email ? { email: data.customer.email } : {}),
+      };
+
+      const loginResponse = await loginAuthUser(loginPayload);
+
+      if (!loginResponse?.success) {
+        throw new Error(loginResponse?.message || "Login failed.");
+      }
+
+      const token = loginResponse?.token || loginResponse?.data?.token || null;
+      const user = loginResponse?.user || loginResponse?.data?.user || null;
+
+      if (token) {
+        localStorage.setItem(AUTH_STORAGE_KEY, token);
+      }
+
+      if (user) {
+        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+      }
+
       setSubmitSuccess({
-        message: "Booking submitted successfully! Our agent will contact you shortly.",
-        data: response.data || bookingPayload,
+        message: "Registration and login successful. Redirecting to your profile...",
+        data: {
+          register: registerResponse,
+          login: loginResponse,
+        },
       });
+
+      navigate("/profile", { replace: true });
     } catch (err) {
-      console.warn("API call fallback (Endpoint /api/bookings error or mock environment):", err);
-      // For demonstration / development mode: treat payload as generated cleanly
-      setSubmitSuccess({
-        message: "Booking details generated and submitted successfully!",
-        data: bookingPayload,
-      });
+      const errorMessage = err?.response?.data?.message || err?.message || "Something went wrong.";
+      setSubmitError(errorMessage);
+      setSubmitSuccess(null);
     }
   };
 
@@ -152,6 +167,17 @@ export default function BookingForm({ tour }) {
           <div className="bg-black/50 p-4 rounded-xl text-xs font-mono overflow-x-auto text-emerald-200">
             <pre>{JSON.stringify(submitSuccess.data, null, 2)}</pre>
           </div>
+        </div>
+      )}
+
+      {/* Error Notification Modal */}
+      {submitError && (
+        <div className="mb-8 rounded-2xl border border-rose-500/40 bg-rose-950/40 p-6 backdrop-blur-xl text-white space-y-3">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">⚠️</span>
+            <h3 className="text-lg font-bold text-rose-400">Registration failed</h3>
+          </div>
+          <p className="text-sm text-rose-100">{submitError}</p>
         </div>
       )}
 

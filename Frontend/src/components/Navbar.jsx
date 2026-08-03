@@ -21,11 +21,11 @@ const Navbar = () => {
                 : "bg-transparent"
                 }`}
         >
-            <nav className="flex items-center justify-between px-6 py-3 h-[64px] w-full object-cover">
+            <nav className="flex items-center justify-between px-6 py-3 h-16 w-full object-cover">
 
                 {/* Logo */}
                 <div className="flex items-center ">
-                    <img src="/images/logo.png" alt="logo" className="h-[64px] w-auto object-contain" />
+                    <img src="/images/logo.png" alt="logo" className="h-16 w-auto object-contain" />
                 </div>
 
 
@@ -82,6 +82,7 @@ const Navbar = () => {
 
 
                 {/* Button */}
+                <Link to={"/Login"}>
                 <button
                     className="
           px-6
@@ -96,8 +97,9 @@ const Navbar = () => {
           duration-300
           "
                 >
-                    Book Now
+                    Login
                 </button>
+            </Link>
 
 
             </nav>
