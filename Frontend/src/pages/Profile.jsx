@@ -6,6 +6,7 @@ import StatCard from "../components/profile/StatCard";
 import BookingCard from "../components/profile/BookingCard";
 import { profileData } from "../consts/profileData";
 import { getProfile, updateProfile } from "../api/authApi";
+import { getMyBookings } from "../api/bookingApi";
 import { logoutUser } from "../utils/auth";
 
 const starLabels = ["Poor", "Fair", "Good", "Very Good", "Excellent"];
@@ -17,6 +18,7 @@ export default function Profile() {
   const [comment, setComment] = useState("");
   const [draftReviewId, setDraftReviewId] = useState(null);
   const [user, setUser] = useState(null);
+  const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
@@ -31,15 +33,18 @@ export default function Profile() {
     document.title = "WildVista | Profile";
     const fetchProfile = async () => {
       try {
-        const response = await getProfile();
-        if (response?.success) {
-          setUser(response.user);
+        const [profileResponse, bookingsResponse] = await Promise.all([getProfile(), getMyBookings()]);
+        if (profileResponse?.success) {
+          setUser(profileResponse.user);
           setEditForm({
-            name: response.user.name || "",
-            phone: response.user.phone || "",
-            address: response.user.address || "",
-            city: response.user.city || "",
+            name: profileResponse.user.name || "",
+            phone: profileResponse.user.phone || "",
+            address: profileResponse.user.address || "",
+            city: profileResponse.user.city || "",
           });
+        }
+        if (bookingsResponse?.success) {
+          setBookings(bookingsResponse.bookings || []);
         }
       } catch (error) {
         if (error?.response?.status === 401) {
@@ -180,38 +185,36 @@ export default function Profile() {
         </motion.header>
 
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <StatCard title="Total Tours" value="0" accent="emerald" />
-          <StatCard title="Upcoming Tours" value="0" accent="blue" />
-          <StatCard title="Completed Tours" value="0" accent="amber" />
-          <StatCard title="Member Since" value={user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : "—"} accent="purple" />
+          <StatCard title="Total Bookings" value={bookings.length.toString()} accent="emerald" />
+          <StatCard title="Upcoming Tours" value={bookings.filter((booking) => booking.status !== "Completed" && booking.status !== "Cancelled").length.toString()} accent="blue" />
+          <StatCard title="Completed Tours" value={bookings.filter((booking) => booking.status === "Completed").length.toString()} accent="amber" />
+          <StatCard title="Cancelled Tours" value={bookings.filter((booking) => booking.status === "Cancelled").length.toString()} accent="purple" />
         </div>
 
         <div className="grid gap-6 xl:grid-cols-[1.4fr_0.8fr]">
           <div className="space-y-6">
-            <SectionCard title="Upcoming Bookings" action={<span className="text-sm text-emerald-400">{profileData.upcomingBookings.length} active</span>}>
-              {profileData.upcomingBookings.length ? (
+            <SectionCard title="My Bookings" action={<span className="text-sm text-emerald-400">{bookings.length} total</span>}>
+              {bookings.length ? (
                 <div className="grid gap-4 lg:grid-cols-2">
-                  {profileData.upcomingBookings.map((booking) => (
-                    <BookingCard key={booking.id} booking={booking} />
+                  {bookings.map((booking) => (
+                    <div key={booking._id} className="rounded-[22px] border border-white/10 bg-[#111111]/70 p-4 text-sm text-gray-300">
+                      <div className="flex items-center justify-between gap-3">
+                        <h4 className="font-semibold text-white">{booking.tourTitle}</h4>
+                        <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs text-emerald-300">{booking.status}</span>
+                      </div>
+                      <div className="mt-3 space-y-2 text-sm text-gray-400">
+                        <p>Pickup City: {booking.pickupCity}</p>
+                        <p>Departure Date: {new Date(booking.departureDate).toLocaleDateString()}</p>
+                        <p>Total Travellers: {Number(booking.adults || 0) + Number(booking.children || 0)}</p>
+                        <p>Grand Total: Rs. {Number(booking.totalPrice || 0).toLocaleString()}</p>
+                        <p>Payment: {booking.paymentStatus}</p>
+                      </div>
+                    </div>
                   ))}
                 </div>
               ) : (
                 <div className="rounded-[22px] border border-dashed border-white/15 bg-white/5 p-8 text-center text-gray-300">
-                  No upcoming bookings yet.
-                </div>
-              )}
-            </SectionCard>
-
-            <SectionCard title="Booking History" action={<span className="text-sm text-emerald-400">{profileData.bookingHistory.length} completed</span>}>
-              {profileData.bookingHistory.length ? (
-                <div className="grid gap-4 lg:grid-cols-2">
-                  {profileData.bookingHistory.map((booking) => (
-                    <BookingCard key={booking.title} booking={booking} variant="history" />
-                  ))}
-                </div>
-              ) : (
-                <div className="rounded-[22px] border border-dashed border-white/15 bg-white/5 p-8 text-center text-gray-300">
-                  No past journeys yet.
+                  No bookings yet.
                 </div>
               )}
             </SectionCard>
@@ -268,65 +271,10 @@ export default function Profile() {
               </div>
             </SectionCard>
 
-            <SectionCard title="Wishlist" action={<span className="text-sm text-emerald-400">{profileData.wishlist.length} saved</span>}>
-              {profileData.wishlist.length ? (
-                <div className="grid gap-4 lg:grid-cols-2">
-                  {profileData.wishlist.map((item) => (
-                    <div key={item.title} className="overflow-hidden rounded-[22px] border border-white/10 bg-[#111111]/70">
-                      <img src={item.image} alt={item.title} className="h-36 w-full object-cover" />
-                      <div className="flex items-center justify-between gap-3 p-4">
-                        <p className="font-medium text-white">{item.title}</p>
-                        <div className="flex gap-2">
-                          <button className="rounded-full border border-white/15 px-3 py-1.5 text-sm text-gray-200">View Package</button>
-                          <button className="rounded-full bg-rose-500/15 px-3 py-1.5 text-sm text-rose-200">Remove</button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="rounded-[22px] border border-dashed border-white/15 bg-white/5 p-8 text-center text-gray-300">
-                  Your wishlist is empty.
-                </div>
-              )}
-            </SectionCard>
-
-            <SectionCard title="Saved Travelers" action={<button className="rounded-full border border-white/15 px-3 py-1.5 text-sm text-emerald-400">Add Traveler</button>}>
-              {profileData.travelers.length ? (
-                <div className="grid gap-4 lg:grid-cols-2">
-                  {profileData.travelers.map((traveler) => (
-                    <div key={traveler.idNumber} className="rounded-[22px] border border-white/10 bg-[#111111]/70 p-4 text-sm text-gray-300">
-                      <p className="font-semibold text-white">{traveler.name}</p>
-                      <p className="mt-2">CNIC / Passport: {traveler.idNumber}</p>
-                      <p className="mt-1">Date of Birth: {traveler.dob}</p>
-                      <p className="mt-1">Gender: {traveler.gender}</p>
-                      <div className="mt-4 flex gap-3">
-                        <button className="text-emerald-400">Edit</button>
-                        <button className="text-rose-300">Delete</button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="rounded-[22px] border border-dashed border-white/15 bg-white/5 p-8 text-center text-gray-300">
-                  No saved travelers yet.
-                </div>
-              )}
-            </SectionCard>
           </div>
 
           <div className="space-y-6">
-            <SectionCard title="Notifications">
-              <div className="space-y-3">
-                {profileData.notifications.map((notification) => (
-                  <div key={notification} className="rounded-[20px] border border-white/10 bg-[#111111]/70 p-4 text-sm text-gray-300">
-                    {notification}
-                  </div>
-                ))}
-              </div>
-            </SectionCard>
-
-            <SectionCard title="Account Settings">
+            <SectionCard title="My Profile">
               <form onSubmit={handleSaveProfile} className="space-y-3 text-sm text-gray-300">
                 {message.text ? (
                   <div className={`rounded-[20px] border px-4 py-3 ${message.type === "success" ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300" : "border-rose-500/30 bg-rose-500/10 text-rose-200"}`}>
@@ -343,25 +291,6 @@ export default function Profile() {
                   {saving ? "Saving..." : "Save Changes"}
                 </button>
               </form>
-            </SectionCard>
-
-            <SectionCard title="Security">
-              <div className="space-y-3 text-sm text-gray-300">
-                <div className="rounded-[20px] border border-white/10 bg-[#111111]/70 p-4">Last Login: 08:45 AM, Today</div>
-                <div className="rounded-[20px] border border-white/10 bg-[#111111]/70 p-4">Active Sessions: 2 devices</div>
-                <button className="w-full rounded-full bg-rose-500/15 px-4 py-2.5 text-sm font-medium text-rose-200 transition hover:bg-rose-500/25">
-                  Logout from All Devices
-                </button>
-              </div>
-            </SectionCard>
-
-            <SectionCard title="Support">
-              <div className="space-y-3 text-sm text-gray-300">
-                <div className="rounded-[20px] border border-white/10 bg-[#111111]/70 p-4">Contact Support</div>
-                <div className="rounded-[20px] border border-white/10 bg-[#111111]/70 p-4">FAQs</div>
-                <div className="rounded-[20px] border border-white/10 bg-[#111111]/70 p-4">Terms & Conditions</div>
-                <div className="rounded-[20px] border border-white/10 bg-[#111111]/70 p-4">Privacy Policy</div>
-              </div>
             </SectionCard>
 
             <SectionCard title="Session" className="bg-[#111111]/80">

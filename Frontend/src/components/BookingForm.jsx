@@ -9,8 +9,8 @@ import ExtraServices from "./ExtraServices";
 import BookingSummary from "./BookingSummary";
 import useBookingPrice from "../hooks/useBookingPrice";
 import { ROOM_OPTIONS, EXTRA_SERVICES } from "../consts/BookingOption";
-import { registerUser, loginUser as loginAuthUser } from "../api/authApi";
-import { AUTH_STORAGE_KEY, USER_STORAGE_KEY } from "../utils/auth";
+import { createBooking } from "../api/bookingApi";
+import { getAuthToken } from "../utils/auth";
 
 export default function BookingForm({ tour }) {
   const navigate = useNavigate();
@@ -85,50 +85,43 @@ export default function BookingForm({ tour }) {
     setSubmitError(null);
     setSubmitSuccess(null);
 
-    const registrationPayload = {
-      name: data.customer.name,
-      phone: data.customer.phone,
-      cnic: data.customer.cnic,
-      email: data.customer.email || "",
-      password: data.customer.password,
+    if (!getAuthToken()) {
+      setSubmitError("Please log in before making a booking.");
+      navigate("/login", { replace: true });
+      return;
+    }
+
+    const bookingPayload = {
+      userName: data.customer?.name || "",
+      email: data.customer?.email || "",
+      phoneNumber: data.customer?.phone || "",
+      tourId: defaultTour?.id || "",
+      tourTitle: defaultTour?.title || defaultTour?.hero?.title || "WildVista Tour",
+      pickupCity: data.booking?.pickupCity || "",
+      departureDate: data.booking?.travelDate || "",
+      tourPricePerAdult: Number(defaultTour?.price || defaultTour?.pricing?.single || 0),
+      adults: Number(data.booking?.adults || 1),
+      children: Number(data.booking?.children || 0),
+      travellers: (data.travelers || []).map((traveler) => ({
+        fullName: traveler.name || "",
+        age: Number(traveler.age || 0),
+        cnic: traveler.cnic || "",
+        gender: traveler.gender || "Male",
+      })),
+      childrenDetails: Array.isArray(data.childrenDetails) ? data.childrenDetails : [],
+      extraServices: Array.isArray(data.extras) ? data.extras : [],
     };
 
     try {
-      const registerResponse = await registerUser(registrationPayload);
+      const response = await createBooking(bookingPayload);
 
-      if (!registerResponse?.success) {
-        throw new Error(registerResponse?.message || "Registration failed.");
-      }
-
-      const loginPayload = {
-        password: data.customer.password,
-        ...(data.customer.cnic ? { cnic: data.customer.cnic } : {}),
-        ...(data.customer.email ? { email: data.customer.email } : {}),
-      };
-
-      const loginResponse = await loginAuthUser(loginPayload);
-
-      if (!loginResponse?.success) {
-        throw new Error(loginResponse?.message || "Login failed.");
-      }
-
-      const token = loginResponse?.token || loginResponse?.data?.token || null;
-      const user = loginResponse?.user || loginResponse?.data?.user || null;
-
-      if (token) {
-        localStorage.setItem(AUTH_STORAGE_KEY, token);
-      }
-
-      if (user) {
-        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+      if (!response?.success) {
+        throw new Error(response?.message || "Booking failed.");
       }
 
       setSubmitSuccess({
-        message: "Registration and login successful. Redirecting to your profile...",
-        data: {
-          register: registerResponse,
-          login: loginResponse,
-        },
+        message: "Booking created successfully. Redirecting to your dashboard...",
+        data: response.booking,
       });
 
       navigate("/profile", { replace: true });

@@ -37,7 +37,13 @@ const userSchema = new mongoose.Schema(
         profilePicture: {
             type: String,
             default: "",
-        }
+        },
+        bookings: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Booking",
+            }
+        ]
     },
     {
         timestamps: true,
