@@ -1,73 +1,68 @@
 import mongoose from "mongoose";
 
+const travellerSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    cnic: {
+        type: String,
+        required: true,
+    },
+    phone: {
+        type: String,
+        required: true,
+    },
+    email: {
+        type: String,
+        required: true,
+    },
+    gender: {
+        type: String,
+        required: true,
+    },
+    age: {
+        type: Number,
+        required: true,
+    },
+    
+});
+
 const bookingSchema = new mongoose.Schema(
     {
-        userId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            required: true,
-        },
-        userName: {
-            type: String,
-            default: "",
-        },
-        email: {
-            type: String,
-            default: "",
-        },
-        phoneNumber: {
-            type: String,
-            required: true,
-        },
         tourId: {
             type: String,
-            default: "",
+            required: true,
         },
-        tourTitle: {
+        tourName: {
             type: String,
             required: true,
+        },
+        bookingDate: {
+            type: Date,
+            required: true,
+        },
+        adults: {
+            type: Number,
+            required: true,
+            default: 1,
+        },
+        children: {
+            type: Number,
+            required: true,
+            default: 0,
+        },
+        totalPersons: {
+            type: Number,
+            required: true,
+            default: 1,
         },
         pickupCity: {
             type: String,
             required: true,
         },
-        departureDate: {
-            type: Date,
-            required: true,
-        },
-        tourPricePerAdult: {
-            type: Number,
-            required: true,
-        },
-        adults: {
-            type: Number,
-            default: 1,
-        },
-        children: {
-            type: Number,
-            default: 0,
-        },
-        travellers: [
-            {
-                fullName: { type: String, required: true },
-                age: { type: Number, required: true },
-                cnic: { type: String, required: true },
-                gender: { type: String, required: true },
-            }
-        ],
-        childrenDetails: [
-            {
-                fullName: { type: String, required: true },
-                age: { type: Number, required: true },
-            }
-        ],
-        extraServices: [{ type: String }],
-        originalPrice: {
-            type: Number,
-            required: true,
-        },
-        discountedPrice: {
-            type: Number,
+        emergencyContact: {
+            type: String,
             required: true,
         },
         totalPrice: {
@@ -79,11 +74,7 @@ const bookingSchema = new mongoose.Schema(
             enum: ["Pending", "Confirmed", "Cancelled", "Completed"],
             default: "Pending",
         },
-        paymentStatus: {
-            type: String,
-            enum: ["Pending", "Paid", "Refunded"],
-            default: "Pending",
-        },
+        travellers: [travellerSchema],
     },
     {
         timestamps: true,

@@ -4,8 +4,18 @@ import { ROOM_OPTIONS, EXTRA_SERVICES } from "../consts/BookingOption";
 export default function BookingSummary({ tour, watchedValues, calculatedPrice, isSubmitting }) {
   const { booking = {}, roomType = "single", extras = [] } = watchedValues || {};
 
-  const basePrice = Number(tour?.price || tour?.pricing?.single || 45000);
-  const adults = Number(booking.adults) || 1;
+  const adultPrice = Number(tour?.pricing?.single ? tour.pricing.single * 100 : 45000);
+  const childPrice = adultPrice * 0.70;
+
+  const {
+    adultCount = 1,
+    childCount = 0,
+    adultCost = 0,
+    childCost = 0,
+    roomPrice = 0,
+    extrasTotal = 0,
+    total = 0,
+  } = calculatedPrice || {};
 
   // Selected Room Details
   const selectedRoomObj = ROOM_OPTIONS.find((r) => r.value === roomType) || ROOM_OPTIONS[0];
@@ -30,10 +40,10 @@ export default function BookingSummary({ tour, watchedValues, calculatedPrice, i
       <div className="space-y-1">
         <p className="text-xs text-gray-400 uppercase tracking-wider">Tour Package</p>
         <p className="text-lg font-bold text-white">
-          {tour?.title || tour?.hero?.title || "Hunza Valley Adventure"}
+          {tour?.hero?.title || tour?.title || "Hunza Valley Adventure"}
         </p>
         <p className="text-xs text-emerald-400">
-          📍 {tour?.location || tour?.hero?.location || "Hunza"} · 🕒 {tour?.duration || tour?.hero?.duration || "5 Days"}
+          📍 {tour?.hero?.location || tour?.location || "Hunza"} · 🕒 {tour?.hero?.duration || tour?.duration || "5 Days"}
         </p>
       </div>
 
@@ -52,9 +62,8 @@ export default function BookingSummary({ tour, watchedValues, calculatedPrice, i
         <div className="flex justify-between text-gray-300">
           <span className="text-gray-400">Travelers:</span>
           <span className="font-medium text-white">
-            {adults} Adult{adults > 1 ? "s" : ""}
-            {Number(booking.children) > 0 ? `, ${booking.children} Child` : ""}
-            {Number(booking.infants) > 0 ? `, ${booking.infants} Infant` : ""}
+            {adultCount} Adult{adultCount > 1 ? "s" : ""}
+            {childCount > 0 ? `, ${childCount} Child${childCount > 1 ? "ren" : ""}` : ""}
           </span>
         </div>
       </div>
@@ -65,14 +74,22 @@ export default function BookingSummary({ tour, watchedValues, calculatedPrice, i
           Cost Breakdown
         </p>
 
-        {/* Base Price */}
+        {/* Adults Base Price */}
         <div className="flex justify-between text-gray-300">
-          <span>Tour ({adults} x Rs. {basePrice.toLocaleString()})</span>
-          <span className="font-medium text-white">Rs. {calculatedPrice?.tourTotal?.toLocaleString() || 0}</span>
+          <span>Adults ({adultCount} x Rs. {adultPrice.toLocaleString()})</span>
+          <span className="font-medium text-white">Rs. {adultCost.toLocaleString()}</span>
         </div>
 
+        {/* Children Price (if any) */}
+        {childCount > 0 && (
+          <div className="flex justify-between text-gray-300">
+            <span>Children ({childCount} x Rs. {childPrice.toLocaleString()})</span>
+            <span className="font-medium text-white">Rs. {childCost.toLocaleString()}</span>
+          </div>
+        )}
+
         {/* Room Price */}
-        <div className="flex justify-between text-gray-300">
+        <div className="flex justify-between text-gray-300 border-t border-white/5 pt-2">
           <span>Room ({selectedRoomObj.label})</span>
           <span className="font-medium text-white">
             {selectedRoomObj.price === 0 ? "Free" : `+Rs. ${selectedRoomObj.price.toLocaleString()}`}
@@ -81,7 +98,7 @@ export default function BookingSummary({ tour, watchedValues, calculatedPrice, i
 
         {/* Extra Services Breakdown */}
         {selectedExtrasList.length > 0 ? (
-          <div className="space-y-1 pt-1">
+          <div className="space-y-1 pt-1 border-t border-white/5">
             <span className="text-gray-400 block font-medium">Selected Extras:</span>
             {selectedExtrasList.map((extra) => (
               <div key={extra.value} className="flex justify-between text-[11px] text-gray-300 pl-2">
@@ -91,7 +108,7 @@ export default function BookingSummary({ tour, watchedValues, calculatedPrice, i
             ))}
           </div>
         ) : (
-          <div className="flex justify-between text-gray-400 text-[11px]">
+          <div className="flex justify-between text-gray-400 text-[11px] border-t border-white/5 pt-1">
             <span>Extra Services</span>
             <span>None selected</span>
           </div>
@@ -101,13 +118,13 @@ export default function BookingSummary({ tour, watchedValues, calculatedPrice, i
       {/* Total Estimated Price Display */}
       <div className="rounded-xl border border-emerald-500/30 bg-emerald-950/30 p-4 space-y-1">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-semibold text-gray-300">Estimated Total</span>
+          <span className="text-xs font-semibold text-gray-300">Grand Total</span>
           <span className="text-2xl font-black text-emerald-400">
-            Rs. {(calculatedPrice?.total || 0).toLocaleString()}
+            Rs. {total.toLocaleString()}
           </span>
         </div>
         <p className="text-[10px] text-gray-400 text-center pt-1 border-t border-emerald-500/20">
-          🔒 Preview only. Final total will be verified by server.
+          🔒 Secured booking estimate. Taxes included.
         </p>
       </div>
 
@@ -120,7 +137,7 @@ export default function BookingSummary({ tour, watchedValues, calculatedPrice, i
         {isSubmitting ? (
           <>
             <span className="animate-spin border-2 border-black border-t-transparent rounded-full w-5 h-5"></span>
-            Processing Booking...
+            Confirming Booking...
           </>
         ) : (
           <>Confirm & Book Tour →</>

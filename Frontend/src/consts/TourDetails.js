@@ -2,6 +2,7 @@
 export const tours = [
   {
     slug: "hunza-valley-adventure",
+    availableSeats: 12,
     hero: {
       coverImage: "/images/Hunza.jpg",
       title: "Hunza Valley Adventure",
@@ -59,6 +60,7 @@ export const tours = [
   },
   {
     slug: "skardu-lakes-escape",
+    availableSeats: 8,
     hero: {
       coverImage: "/images/Skardu.jpg",
       title: "Skardu Lakes Escape",
@@ -115,6 +117,7 @@ export const tours = [
   },
   {
     slug: "fairy-meadows-trek",
+    availableSeats: 5,
     hero: {
       coverImage: "/images/Fairy Meadows.jpg",
       title: "Fairy Meadows Trek",
@@ -171,6 +174,7 @@ export const tours = [
   },
   {
     slug: "naran-kaghan-experience",
+    availableSeats: 10,
     hero: {
       coverImage: "/images/Naran-Kaghan.jpg",
       title: "Naran Kaghan Experience",
@@ -227,6 +231,7 @@ export const tours = [
   },
   {
     slug: "deosai-plains-expedition",
+    availableSeats: 6,
     hero: {
       coverImage: "/images/Deosai-Plains.jpg",
       title: "Deosai Plains Expedition",
@@ -283,6 +288,7 @@ export const tours = [
   },
   {
     slug: "neelum-valley-retreat",
+    availableSeats: 15,
     hero: {
       coverImage: "/images/Neelum-Valley.jpg",
       title: "Neelum Valley Retreat",
@@ -339,6 +345,7 @@ export const tours = [
   },
   {
     slug: "passu-cones-safari",
+    availableSeats: 7,
     hero: {
       coverImage: "/images/Passu-cone.jpg",
       title: "Passu Cones Safari",
@@ -394,6 +401,7 @@ export const tours = [
   },
   {
     slug: "attabad-lake-journey",
+    availableSeats: 9,
     hero: {
       coverImage: "/images/Attabad-Lake.jpg",
       title: "Attabad Lake Journey",

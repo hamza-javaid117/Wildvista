@@ -82,7 +82,7 @@ const Navbar = () => {
 
 
                 {/* Button */}
-                <Link to={"/Login"}>
+                <Link to={"/BookForm"}>
                 <button
                     className="
           px-6
@@ -97,7 +97,7 @@ const Navbar = () => {
           duration-300
           "
                 >
-                    Login
+                    Book Now
                 </button>
             </Link>
 

@@ -1,28 +1,16 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import PersonalInfo from "./PersonalInfo";
 import TourDetails from "./TourDetails";
 import TravelerDetails from "./TravelerDetails";
 import RoomSelection from "./RoomSelection";
 import ExtraServices from "./ExtraServices";
 import BookingSummary from "./BookingSummary";
-import useBookingPrice from "../hooks/useBookingPrice";
 import { ROOM_OPTIONS, EXTRA_SERVICES } from "../consts/BookingOption";
 import { createBooking } from "../api/bookingApi";
-import { getAuthToken } from "../utils/auth";
 
-export default function BookingForm({ tour }) {
-  const navigate = useNavigate();
-
-  const defaultTour = tour || {
-    id: "hunza-123",
-    title: "Hunza Valley Adventure",
-    price: 45000,
-    duration: "5 Days",
-    location: "Hunza, Gilgit-Baltistan",
-  };
-
+export default function BookingForm({ tours = [], initialTour }) {
+  const [selectedTour, setSelectedTour] = useState(initialTour || tours[0] || null);
   const [submitSuccess, setSubmitSuccess] = useState(null);
   const [submitError, setSubmitError] = useState(null);
 
@@ -30,6 +18,7 @@ export default function BookingForm({ tour }) {
     register,
     handleSubmit,
     watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
@@ -39,17 +28,13 @@ export default function BookingForm({ tour }) {
         email: "",
         emergencyContact: "",
         cnic: "",
-        password: "",
       },
       booking: {
         travelDate: "",
         pickupCity: "Islamabad",
-        adults: 1,
-        children: 0,
-        infants: 0,
       },
       travelers: [
-        { name: "", cnic: "", age: "", gender: "Male" },
+        { name: "", cnic: "", phone: "", email: "", gender: "Male", age: "" },
       ],
       roomType: "single",
       extras: [],
@@ -57,59 +42,88 @@ export default function BookingForm({ tour }) {
     },
   });
 
-  // Watch form values for dynamic calculation and preview
+  // Watch form values for dynamic calculation
   const watchedValues = watch();
-  const adults = watchedValues.booking?.adults || 1;
+  const travelersList = watchedValues.travelers || [];
   const roomType = watchedValues.roomType || "single";
   const extras = watchedValues.extras || [];
 
-  // Get selected room price
+  // Calculate pricing based on age and tour base price
+  const adultBasePrice = selectedTour?.pricing?.single ? selectedTour.pricing.single * 100 : 45000;
+  const childBasePrice = adultBasePrice * 0.70;
+
+  let adultCount = 0;
+  let childCount = 0;
+  let adultCost = 0;
+  let childCost = 0;
+
+  travelersList.forEach((traveller) => {
+    // If age is not set, default to adult
+    const age = traveller.age !== undefined && traveller.age !== "" ? Number(traveller.age) : 12;
+    if (age >= 12) {
+      adultCount++;
+      adultCost += adultBasePrice;
+    } else {
+      childCount++;
+      childCost += childBasePrice;
+    }
+  });
+
+  // Safe checks for counts (at least 1 traveler total if travelers array is empty)
+  if (travelersList.length === 0) {
+    adultCount = 1;
+    adultCost = adultBasePrice;
+  }
+
+  // Selected Room Details
   const selectedRoomObj = ROOM_OPTIONS.find((r) => r.value === roomType);
   const roomPrice = selectedRoomObj ? selectedRoomObj.price : 0;
 
-  // Calculate sum of selected extra services
+  // Selected Extras Details
   const extrasTotal = EXTRA_SERVICES.filter((e) =>
     Array.isArray(extras) && extras.includes(e.value)
   ).reduce((acc, curr) => acc + curr.price, 0);
 
-  // Price Calculation Hook
-  const calculatedPrice = useBookingPrice({
-    basePrice: defaultTour.price || defaultTour.pricing?.single || 45000,
-    adults,
+  const grandTotal = adultCost + childCost + roomPrice + extrasTotal;
+
+  const calculatedPrice = {
+    adultCount,
+    childCount,
+    adultCost,
+    childCost,
     roomPrice,
     extrasTotal,
-  });
+    total: grandTotal,
+  };
+
+  const handleTourChange = (slug) => {
+    const tour = tours.find((t) => t.slug === slug);
+    if (tour) {
+      setSelectedTour(tour);
+    }
+  };
 
   // Submit Handler
   const onSubmit = async (data) => {
     setSubmitError(null);
     setSubmitSuccess(null);
 
-    if (!getAuthToken()) {
-      setSubmitError("Please log in before making a booking.");
-      // navigate("/login", { replace: true });
-      return;
-    }
-
     const bookingPayload = {
-      userName: data.customer?.name || "",
-      email: data.customer?.email || "",
-      phoneNumber: data.customer?.phone || "",
-      tourId: defaultTour?.id || "",
-      tourTitle: defaultTour?.title || defaultTour?.hero?.title || "WildVista Tour",
+      tourId: selectedTour?.slug || "",
+      tourName: selectedTour?.hero?.title || selectedTour?.title || "WildVista Tour",
+      bookingDate: data.booking?.travelDate || "",
       pickupCity: data.booking?.pickupCity || "",
-      departureDate: data.booking?.travelDate || "",
-      tourPricePerAdult: Number(defaultTour?.price || defaultTour?.pricing?.single || 0),
-      adults: Number(data.booking?.adults || 1),
-      children: Number(data.booking?.children || 0),
-      travellers: (data.travelers || []).map((traveler) => ({
-        fullName: traveler.name || "",
-        age: Number(traveler.age || 0),
-        cnic: traveler.cnic || "",
-        gender: traveler.gender || "Male",
+      emergencyContact: data.customer?.emergencyContact || "",
+      tourPricePerAdult: adultBasePrice,
+      totalPrice: grandTotal,
+      travellers: (data.travelers || []).map((t) => ({
+        name: t.name || "",
+        cnic: t.cnic || "",
+        phone: t.phone || "",
+        email: t.email || "",
+        gender: t.gender || "Male",
+        age: Number(t.age || 0),
       })),
-      childrenDetails: Array.isArray(data.childrenDetails) ? data.childrenDetails : [],
-      extraServices: Array.isArray(data.extras) ? data.extras : [],
     };
 
     try {
@@ -120,15 +134,16 @@ export default function BookingForm({ tour }) {
       }
 
       setSubmitSuccess({
-        message: "Booking created successfully. Redirecting to your dashboard...",
-        data: response.booking,
+        message: "Your luxury tour booking is confirmed! Details are stored securely.",
+        booking: response.booking,
       });
-
-      navigate("/profile", { replace: true });
+      
+      // Smooth scroll to top to see success message
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
       const errorMessage = err?.response?.data?.message || err?.message || "Something went wrong.";
       setSubmitError(errorMessage);
-      setSubmitSuccess(null);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -143,81 +158,100 @@ export default function BookingForm({ tour }) {
           Book Your Next Adventure
         </h1>
         <p className="text-gray-400 text-sm sm:text-base max-w-2xl">
-          Complete the form below to reserve your spot for{" "}
-          <span className="text-emerald-400 font-semibold">
-            {defaultTour.title || defaultTour.hero?.title || "Hunza Valley Adventure"}
-          </span>
+          Complete the form below to reserve your luxury spot. No account required.
         </p>
       </div>
 
       {/* Success Notification Modal */}
       {submitSuccess && (
-        <div className="mb-8 rounded-2xl border border-emerald-500/40 bg-emerald-950/40 p-6 backdrop-blur-xl text-white space-y-3">
+        <div className="mb-8 rounded-2xl border border-emerald-500/40 bg-emerald-950/40 p-6 sm:p-8 backdrop-blur-xl text-white space-y-5 animate-fadeIn">
           <div className="flex items-center gap-3">
-            <span className="text-2xl">🎉</span>
-            <h3 className="text-lg font-bold text-emerald-400">{submitSuccess.message}</h3>
+            <span className="text-3xl">🎉</span>
+            <div>
+              <h3 className="text-xl font-bold text-emerald-400">Booking Confirmed!</h3>
+              <p className="text-sm text-gray-300">Thank you for booking with WildVista. Your travel details are saved.</p>
+            </div>
           </div>
-          <div className="bg-black/50 p-4 rounded-xl text-xs font-mono overflow-x-auto text-emerald-200">
-            <pre>{JSON.stringify(submitSuccess.data, null, 2)}</pre>
+          <div className="bg-black/50 p-6 rounded-xl space-y-4 border border-white/10">
+            <h4 className="text-sm uppercase tracking-wider text-emerald-400 font-bold">Booking Details</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-300">
+              <p>📌 <strong className="text-white">Tour Name:</strong> {submitSuccess.booking.tourName}</p>
+              <p>📅 <strong className="text-white">Travel Date:</strong> {new Date(submitSuccess.booking.bookingDate).toLocaleDateString()}</p>
+              <p>🚌 <strong className="text-white">Pickup City:</strong> {submitSuccess.booking.pickupCity}</p>
+              <p>🚨 <strong className="text-white">Emergency Contact:</strong> {submitSuccess.booking.emergencyContact}</p>
+              <p>👥 <strong className="text-white">Total Travelers:</strong> {submitSuccess.booking.totalPersons} ({submitSuccess.booking.adults} Adults, {submitSuccess.booking.children} Children)</p>
+              <p>💰 <strong className="text-white">Grand Total:</strong> Rs. {submitSuccess.booking.totalPrice.toLocaleString()}</p>
+            </div>
           </div>
         </div>
       )}
 
       {/* Error Notification Modal */}
       {submitError && (
-        <div className="mb-8 rounded-2xl border border-rose-500/40 bg-rose-950/40 p-6 backdrop-blur-xl text-white space-y-3">
+        <div className="mb-8 rounded-2xl border border-rose-500/40 bg-rose-950/40 p-6 backdrop-blur-xl text-white space-y-2 animate-fadeIn">
           <div className="flex items-center gap-3">
             <span className="text-2xl">⚠️</span>
-            <h3 className="text-lg font-bold text-rose-400">Registration failed</h3>
+            <h3 className="text-lg font-bold text-rose-400">Booking Submission Failed</h3>
           </div>
           <p className="text-sm text-rose-100">{submitError}</p>
         </div>
       )}
 
-      {/* Main 2-Column Responsive Layout */}
-      <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column: Input Sections */}
-        <div className="lg:col-span-7 space-y-8">
-          <PersonalInfo register={register} errors={errors} />
+      {!submitSuccess && (
+        <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Left Column: Input Sections */}
+          <div className="lg:col-span-7 space-y-8">
+            <PersonalInfo register={register} errors={errors} />
 
-          <TourDetails tour={defaultTour} register={register} errors={errors} watch={watch} />
+            <TourDetails
+              tours={tours}
+              selectedTour={selectedTour}
+              onTourChange={handleTourChange}
+              register={register}
+              errors={errors}
+            />
 
-          <TravelerDetails adultsCount={adults} register={register} errors={errors} />
+            <TravelerDetails
+              register={register}
+              control={control}
+              errors={errors}
+            />
 
-          <RoomSelection register={register} watch={watch} errors={errors} />
+            <RoomSelection register={register} watch={watch} errors={errors} />
 
-          <ExtraServices register={register} watch={watch} />
+            <ExtraServices register={register} watch={watch} />
 
-          {/* Special Requests */}
-          <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 sm:p-8 space-y-4">
-            <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm">
-                6
-              </span>
-              <div>
-                <h2 className="text-xl font-bold text-white">Special Instructions or Requests</h2>
-                <p className="text-xs text-gray-400">Dietary requirements, accessibility, etc.</p>
+            {/* Special Requests */}
+            <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 sm:p-8 space-y-4">
+              <div className="flex items-center gap-3 border-b border-white/10 pb-4">
+                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm">
+                  6
+                </span>
+                <div>
+                  <h2 className="text-xl font-bold text-white">Special Instructions or Requests</h2>
+                  <p className="text-xs text-gray-400">Dietary requirements, accessibility, etc.</p>
+                </div>
               </div>
+              <textarea
+                rows={3}
+                placeholder="Any special requests or instructions for our tour team..."
+                {...register("specialRequest")}
+                className="w-full rounded-xl bg-white/5 border border-white/15 focus:border-emerald-500 focus:ring-emerald-500 p-4 text-white placeholder-gray-500 focus:outline-none focus:ring-1 transition text-sm"
+              />
             </div>
-            <textarea
-              rows={3}
-              placeholder="Any special requests or instructions for our tour team..."
-              {...register("specialRequest")}
-              className="w-full rounded-xl bg-white/5 border border-white/15 focus:border-emerald-500 focus:ring-emerald-500 p-4 text-white placeholder-gray-500 focus:outline-none focus:ring-1 transition text-sm"
+          </div>
+
+          {/* Right Column: Sticky Booking Summary */}
+          <div className="lg:col-span-5">
+            <BookingSummary
+              tour={selectedTour}
+              watchedValues={watchedValues}
+              calculatedPrice={calculatedPrice}
+              isSubmitting={isSubmitting}
             />
           </div>
-        </div>
-
-        {/* Right Column: Sticky Booking Summary */}
-        <div className="lg:col-span-5">
-          <BookingSummary
-            tour={defaultTour}
-            watchedValues={watchedValues}
-            calculatedPrice={calculatedPrice}
-            isSubmitting={isSubmitting}
-          />
-        </div>
-      </form>
+        </form>
+      )}
     </div>
   );
 }

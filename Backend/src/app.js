@@ -1,8 +1,6 @@
 import express from "express";
 import cors from "cors";
 
-import userRouter from "./routes/user.route.js";
-import Loginrouter from "./routes/login.routes.js";
 import bookingRouter from "./routes/booking.routes.js";
 
 const app = express();
@@ -23,9 +21,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/v1/user", userRouter);
-app.use("/api/v1/user", Loginrouter);
-app.use("/api/v1/booking", bookingRouter);
+app.use("/api/v1/bookings", bookingRouter);
 
 app.get("/", (req, res) => {
     res.send("Hello World");
