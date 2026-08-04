@@ -87,7 +87,7 @@ export default function BookingForm({ tour }) {
 
     if (!getAuthToken()) {
       setSubmitError("Please log in before making a booking.");
-      navigate("/login", { replace: true });
+      // navigate("/login", { replace: true });
       return;
     }
 
