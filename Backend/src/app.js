@@ -4,7 +4,7 @@ import cors from "cors";
 import bookingRouter from "./routes/booking.routes.js";
 
 const app = express();
-const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173", "https://wildvista-sable.vercel.app/"];
+const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173", "https://wildvista-sable.vercel.app"];
 
 app.use(cors({
     origin: (origin, callback) => {
