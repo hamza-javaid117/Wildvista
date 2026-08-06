@@ -148,17 +148,14 @@ export default function TravelerDetails({ register, control, errors }) {
                 {/* Email Address */}
                 <div className="space-y-1.5">
                   <label className="block text-xs font-medium text-gray-300">
-                    Email Address <span className="text-emerald-400">*</span>
+                    Email Address
                   </label>
                   <input
                     type="email"
                     placeholder="e.g. email@domain.com"
                     {...register(`travelers.${index}.email`, {
-                      required: "Email is required",
-                      pattern: {
-                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                        message: "Enter a valid email",
-                      },
+                      validate: (value) =>
+                        !value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || "Enter a valid email",
                     })}
                     className={`w-full rounded-xl bg-white/5 border ${
                       travelerErr?.email ? "border-red-500 focus:ring-red-500" : "border-white/15 focus:border-emerald-500 focus:ring-emerald-500"

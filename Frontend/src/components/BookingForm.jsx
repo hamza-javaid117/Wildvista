@@ -7,12 +7,14 @@ import RoomSelection from "./RoomSelection";
 import ExtraServices from "./ExtraServices";
 import BookingSummary from "./BookingSummary";
 import { ROOM_OPTIONS, EXTRA_SERVICES } from "../consts/BookingOption";
-import { createBooking } from "../api/bookingApi";
+import { createBooking, downloadTicket } from "../api/bookingApi";
 
 export default function BookingForm({ tours = [], initialTour }) {
   const [selectedTour, setSelectedTour] = useState(initialTour || tours[0] || null);
   const [submitSuccess, setSubmitSuccess] = useState(null);
   const [submitError, setSubmitError] = useState(null);
+  const [ticketDownloadError, setTicketDownloadError] = useState(null);
+  const [isDownloadingTicket, setIsDownloadingTicket] = useState(false);
 
   const {
     register,
@@ -107,10 +109,13 @@ export default function BookingForm({ tours = [], initialTour }) {
   const onSubmit = async (data) => {
     setSubmitError(null);
     setSubmitSuccess(null);
+    setTicketDownloadError(null);
 
     const bookingPayload = {
       tourId: selectedTour?.slug || "",
       tourName: selectedTour?.hero?.title || selectedTour?.title || "WildVista Tour",
+      destination: selectedTour?.hero?.title || selectedTour?.title || "WildVista Tour",
+      duration: selectedTour?.hero?.duration || selectedTour?.duration || "",
       bookingDate: data.booking?.travelDate || "",
       pickupCity: data.booking?.pickupCity || "",
       emergencyContact: data.customer?.emergencyContact || "",
@@ -136,6 +141,7 @@ export default function BookingForm({ tours = [], initialTour }) {
       setSubmitSuccess({
         message: "Your luxury tour booking is confirmed! Details are stored securely.",
         booking: response.booking,
+        bookingId: response.bookingId || response.booking?._id,
       });
       
       // Smooth scroll to top to see success message
@@ -144,6 +150,45 @@ export default function BookingForm({ tours = [], initialTour }) {
       const errorMessage = err?.response?.data?.message || err?.message || "Something went wrong.";
       setSubmitError(errorMessage);
       window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const handleDownloadTicket = async () => {
+    if (!submitSuccess?.bookingId) {
+      setTicketDownloadError("Booking information is missing.");
+      return;
+    }
+
+    setTicketDownloadError(null);
+    setIsDownloadingTicket(true);
+
+    try {
+      const response = await downloadTicket(submitSuccess.bookingId);
+      const contentDisposition = response.headers["content-disposition"];
+      let fileName = `wildvista-ticket-${submitSuccess.bookingId}.pdf`;
+
+      if (contentDisposition) {
+        const fileNameMatch = contentDisposition.match(/filename="?([^";]+)"?/);
+        if (fileNameMatch?.[1]) {
+          fileName = fileNameMatch[1];
+        }
+      }
+
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      const message = err?.response?.data?.message || err?.message || "Unable to download ticket. Please try again.";
+      setTicketDownloadError(message);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } finally {
+      setIsDownloadingTicket(false);
     }
   };
 
@@ -165,16 +210,46 @@ export default function BookingForm({ tours = [], initialTour }) {
       {/* Success Notification Modal */}
       {submitSuccess && (
         <div className="mb-8 rounded-2xl border border-emerald-500/40 bg-emerald-950/40 p-6 sm:p-8 backdrop-blur-xl text-white space-y-5 animate-fadeIn">
-          <div className="flex items-center gap-3">
-            <span className="text-3xl">🎉</span>
-            <div>
-              <h3 className="text-xl font-bold text-emerald-400">Booking Confirmed!</h3>
-              <p className="text-sm text-gray-300">Thank you for booking with WildVista. Your travel details are saved.</p>
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-center gap-3">
+              <span className="text-3xl">🎉</span>
+              <div>
+                <h3 className="text-xl font-bold text-emerald-400">Booking Successful</h3>
+                <p className="text-sm text-gray-300">Your booking is confirmed. Your ticket is ready to download.</p>
+              </div>
             </div>
+            <button
+              type="button"
+              onClick={handleDownloadTicket}
+              disabled={isDownloadingTicket}
+              className="inline-flex items-center justify-center rounded-full bg-white text-black font-semibold px-5 py-3 transition hover:bg-emerald-400 hover:text-black disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isDownloadingTicket ? "Downloading Ticket..." : "Download Ticket"}
+            </button>
           </div>
+
           <div className="bg-black/50 p-6 rounded-xl space-y-4 border border-white/10">
-            <h4 className="text-sm uppercase tracking-wider text-emerald-400 font-bold">Booking Details</h4>
+            <h4 className="text-sm uppercase tracking-wider text-emerald-400 font-bold">Booking Confirmation</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-300">
+              <div className="space-y-2">
+                <p className="text-gray-400 uppercase tracking-wider text-[11px]">Ticket Number</p>
+                <p className="text-white font-semibold">{submitSuccess.booking.ticketNumber}</p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-gray-400 uppercase tracking-wider text-[11px]">Booking ID</p>
+                <p className="text-white font-semibold">{submitSuccess.bookingId}</p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-gray-400 uppercase tracking-wider text-[11px]">Booking Status</p>
+                <p className="text-white font-semibold">{submitSuccess.booking.bookingStatus}</p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-gray-400 uppercase tracking-wider text-[11px]">Payment Status</p>
+                <p className="text-white font-semibold">{submitSuccess.booking.paymentStatus}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-300 pt-4 border-t border-white/10">
               <p>📌 <strong className="text-white">Tour Name:</strong> {submitSuccess.booking.tourName}</p>
               <p>📅 <strong className="text-white">Travel Date:</strong> {new Date(submitSuccess.booking.bookingDate).toLocaleDateString()}</p>
               <p>🚌 <strong className="text-white">Pickup City:</strong> {submitSuccess.booking.pickupCity}</p>
@@ -182,6 +257,12 @@ export default function BookingForm({ tours = [], initialTour }) {
               <p>👥 <strong className="text-white">Total Travelers:</strong> {submitSuccess.booking.totalPersons} ({submitSuccess.booking.adults} Adults, {submitSuccess.booking.children} Children)</p>
               <p>💰 <strong className="text-white">Grand Total:</strong> Rs. {submitSuccess.booking.totalPrice.toLocaleString()}</p>
             </div>
+
+            {ticketDownloadError && (
+              <div className="rounded-xl bg-rose-950/70 border border-rose-500/30 p-4 text-sm text-rose-100">
+                <strong className="font-semibold">Download failed:</strong> {ticketDownloadError}
+              </div>
+            )}
           </div>
         </div>
       )}

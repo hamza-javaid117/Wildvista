@@ -15,7 +15,8 @@ const travellerSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: true,
+        required: false,
+        trim: true,
     },
     gender: {
         type: String,
@@ -25,7 +26,6 @@ const travellerSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    
 });
 
 const bookingSchema = new mongoose.Schema(
@@ -38,9 +38,19 @@ const bookingSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        destination: {
+            type: String,
+            required: false,
+            trim: true,
+        },
         bookingDate: {
             type: Date,
             required: true,
+        },
+        duration: {
+            type: String,
+            required: false,
+            trim: true,
         },
         adults: {
             type: Number,
@@ -69,10 +79,26 @@ const bookingSchema = new mongoose.Schema(
             type: Number,
             required: true,
         },
-        status: {
+        bookingStatus: {
             type: String,
-            enum: ["Pending", "Confirmed", "Cancelled", "Completed"],
-            default: "Pending",
+            enum: ["confirmed", "pending", "cancelled"],
+            default: "confirmed",
+        },
+        paymentStatus: {
+            type: String,
+            enum: ["pending", "paid", "refunded"],
+            default: "pending",
+        },
+        ticketNumber: {
+            type: String,
+            required: true,
+            unique: true,
+            trim: true,
+        },
+        issuedAt: {
+            type: Date,
+            default: Date.now,
+            required: true,
         },
         travellers: [travellerSchema],
     },
