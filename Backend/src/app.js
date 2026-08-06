@@ -23,8 +23,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1/bookings", bookingRouter);
 
-app.get("/test", (req, res) => {
-    res.send("WildVista Backend is running");
+app.get("/", (req, res) => {
+    res.send("Hello World");
 });
 
 export default app;
