@@ -380,12 +380,10 @@ export default function Destinations() {
                                     </div>
                                 </div>
                                 <Link to={`/PackageDetails/${featuredDestination.slug}`}>
-                                
                                     <button className="bg-white text-[#0A0A0A] px-6 py-3 rounded-full font-medium hover:bg-gray-200 transition-colors">
                                         View Package →
                                     </button>
                                 </Link>
-
                             </div>
                         </div>
 

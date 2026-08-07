@@ -1,12 +1,12 @@
 import React from "react";
 import { PICKUP_CITIES } from "../consts/BookingOption";
+import { getPriceInPKR } from "../consts/TourDetails";
 
 export default function TourDetails({ tours = [], selectedTour, onTourChange, register, errors }) {
   const today = new Date().toISOString().split("T")[0];
 
-  // Helper to format values
   const getAdultPriceVal = (t) => {
-    return t?.pricing?.single ? t.pricing.single * 100 : 45000;
+    return t ? getPriceInPKR(t.pricing.single) : 45000;
   };
 
   const getChildPriceVal = (t) => {

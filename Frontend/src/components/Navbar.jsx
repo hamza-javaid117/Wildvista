@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -21,13 +22,22 @@ const Navbar = () => {
                 : "bg-transparent"
                 }`}
         >
-            <nav className="flex items-center justify-between px-6 py-3 h-16 w-full object-cover">
+            <nav className="relative flex items-center justify-between px-6 py-3 h-16 w-full object-cover">
 
-                {/* Logo */}
-                <div className="flex items-center ">
-                    <img src="/images/logo.png" alt="logo" className="h-16 w-auto object-contain" />
+                <button
+                    type="button"
+                    onClick={() => setIsOpen((prev) => !prev)}
+                    className="md:hidden flex h-12 w-12 flex-col items-center justify-center gap-1.5 rounded-full border border-white/20 bg-white/10 text-white"
+                    aria-label="Toggle navigation menu"
+                >
+                    <span className="h-0.5 w-6 bg-current" />
+                    <span className="h-0.5 w-6 bg-current" />
+                    <span className="h-0.5 w-6 bg-current" />
+                </button>
+
+                <div className="absolute left-[42%] top-1/2 -translate-x-1/2 -translate-y-1/2 md:static md:translate-x-0 md:translate-y-0">
+                    <img src="/images/logo.png" alt="logo" className="h-10 w-auto max-w-[110px] object-contain md:h-16" />
                 </div>
-
 
                 {/* Glass Navigation */}
                 <div
@@ -58,26 +68,19 @@ const Navbar = () => {
                         Destinations
                     </Link>
 
-                    <a
-                        href="#packages"
+                    <Link
+                        to="/packages"
                         className="text-white/90 hover:text-white transition"
                     >
                         Packages
-                    </a>
+                    </Link>
 
-                    <a
-                        href="#about"
+                    <Link
+                        to="/about-us"
                         className="text-white/90 hover:text-white transition"
                     >
-                        About
-                    </a>
-                    <a
-                        href="#gallery"
-                        className="text-white/90 hover:text-white transition"
-                    >
-                        Gallery
-                    </a>
-
+                        About Us
+                    </Link>
                 </div>
 
 
@@ -103,6 +106,24 @@ const Navbar = () => {
 
 
             </nav>
+
+            {/* Mobile menu dropdown */}
+            {isOpen && (
+                <div className="md:hidden mt-2 rounded-2xl bg-black/80 border border-white/10 backdrop-blur-xl p-4 text-white">
+                    <Link onClick={() => setIsOpen(false)} to="/" className="block py-3 text-white/90 hover:text-white">
+                        Home
+                    </Link>
+                    <Link onClick={() => setIsOpen(false)} to="/destinations" className="block py-3 text-white/90 hover:text-white">
+                        Destinations
+                    </Link>
+                    <Link onClick={() => setIsOpen(false)} to="/packages" className="block py-3 text-white/90 hover:text-white">
+                        Packages
+                    </Link>
+                    <Link onClick={() => setIsOpen(false)} to="/about-us" className="block py-3 text-white/90 hover:text-white">
+                        About Us
+                    </Link>
+                </div>
+            )}
         </header>
     );
 };

@@ -191,7 +191,7 @@ export default function Slideshow() {
             </div>
 
             {/* Cards + nav buttons only — no labels, no ratings, no icons */}
-            <div className="cards-row">
+            <div className="cards-row hidden sm:flex">
                 <div className="cards-viewport">
                     {images.map((src, i) => (
                         <div key={i} ref={(el) => (cardRefs.current[i] = el)} className="card">
@@ -200,7 +200,7 @@ export default function Slideshow() {
                     ))}
                 </div>
 
-                <div className="nav-buttons">
+                <div className="nav-buttons hidden sm:flex">
                     <button onClick={prev} className="nav-btn">‹</button>
                     <button onClick={next} className="nav-btn">›</button>
                 </div>

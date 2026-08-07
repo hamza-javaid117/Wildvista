@@ -458,4 +458,26 @@ export const tours = [
   },
 ];
 
+const parseTourPrice = (value) => {
+  if (typeof value === "number" && !Number.isNaN(value)) {
+    return value;
+  }
+  if (typeof value === "string") {
+    const digits = Number(value.replace(/[^\d.]/g, ""));
+    if (!Number.isFinite(digits)) {
+      return 0;
+    }
+    const hasCurrencySuffix = /\/\-|PKR|Rs|rs/i.test(value);
+    return hasCurrencySuffix && digits > 100 ? digits / 100 : digits;
+  }
+  return 0;
+};
+
+export const getPriceInPKR = (value) => parseTourPrice(value) * 100;
+
+export const formatPKR = (value) => {
+  const amount = getPriceInPKR(value);
+  return new Intl.NumberFormat("en-IN").format(amount);
+};
+
 export const getTourBySlug = (slug) => tours.find((t) => t.slug === slug);

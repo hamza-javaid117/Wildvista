@@ -94,3 +94,33 @@
     background: rgba(255, 255, 255, 0.25);
     transform: scale(1.08);
 }
+
+/* Mobile-only hero slideshow cleanup: show only the active background image and hide card peeking */
+@media (max-width: 639px) {
+    .cards-row,
+    .cards-viewport,
+    .card,
+    .nav-buttons {
+        display: none !important;
+    }
+
+    .hero {
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .hero-background {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+    }
+
+    .bg-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}

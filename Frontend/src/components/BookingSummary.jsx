@@ -1,10 +1,11 @@
 import React from "react";
 import { ROOM_OPTIONS, EXTRA_SERVICES } from "../consts/BookingOption";
+import { getPriceInPKR } from "../consts/TourDetails";
 
 export default function BookingSummary({ tour, watchedValues, calculatedPrice, isSubmitting }) {
   const { booking = {}, roomType = "single", extras = [] } = watchedValues || {};
 
-  const adultPrice = Number(tour?.pricing?.single ? tour.pricing.single * 100 : 45000);
+  const adultPrice = tour ? getPriceInPKR(tour.pricing.single) : 45000;
   const childPrice = adultPrice * 0.70;
 
   const {

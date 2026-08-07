@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { tours } from "../consts/TourDetails";
+import { tours, getPriceInPKR } from "../consts/TourDetails";
 import { getTourBySlug } from "../consts/TourDetails";
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
@@ -112,8 +112,8 @@ export default function TourDetails() {
 
           {/* floating glass price cards */}
           <div className="absolute z-10 right-6 sm:right-12 bottom-10 flex flex-col sm:flex-row gap-4">
-            <PriceCard label="Single Person" price={tour.pricing.single} delay={0.3} />
-            <PriceCard label="Couple" price={tour.pricing.couple} delay={0.5} />
+            <PriceCard label="Single Person" price={getPriceInPKR(tour.pricing.single)} delay={0.3} />
+            <PriceCard label="Couple" price={getPriceInPKR(tour.pricing.couple)} delay={0.5} />
           </div>
 
           {/* scroll indicator */}
@@ -325,7 +325,7 @@ function PriceCard({ label, price, delay }) {
       className="rounded-2xl border border-white/15 bg-white/10 backdrop-blur-xl px-6 py-4 min-w-[150px]"
     >
       <p className="text-xs uppercase tracking-wide text-gray-300 mb-1">{label}</p>
-      <p className="text-2xl font-bold text-emerald-400">${price}</p>
+      <p className="text-2xl font-bold text-emerald-400">PKR {price}</p>
     </motion.div>
   );
 }

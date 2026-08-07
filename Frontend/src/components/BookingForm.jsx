@@ -8,6 +8,7 @@ import ExtraServices from "./ExtraServices";
 import BookingSummary from "./BookingSummary";
 import { ROOM_OPTIONS, EXTRA_SERVICES } from "../consts/BookingOption";
 import { createBooking, downloadTicket } from "../api/bookingApi";
+import { getPriceInPKR } from "../consts/TourDetails";
 
 export default function BookingForm({ tours = [], initialTour }) {
   const [selectedTour, setSelectedTour] = useState(initialTour || tours[0] || null);
@@ -51,7 +52,7 @@ export default function BookingForm({ tours = [], initialTour }) {
   const extras = watchedValues.extras || [];
 
   // Calculate pricing based on age and tour base price
-  const adultBasePrice = selectedTour?.pricing?.single ? selectedTour.pricing.single * 100 : 45000;
+  const adultBasePrice = selectedTour ? getPriceInPKR(selectedTour.pricing.single) : 45000;
   const childBasePrice = adultBasePrice * 0.70;
 
   let adultCount = 0;

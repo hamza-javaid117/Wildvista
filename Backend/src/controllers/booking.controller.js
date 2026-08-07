@@ -110,15 +110,10 @@ const getTicketData = (booking) => {
         children: booking?.children ?? "{{children}}",
         totalPersons: booking?.totalPersons ?? "{{totalPersons}}",
         pricePerAdult: booking?.adults ? formatCurrency(Number(booking.totalPrice || 0) / Number(booking.adults)) : "{{pricePerAdult}}",
-        childDiscount: "{{childDiscount}}",
         totalPrice: booking?.totalPrice ? formatCurrency(booking.totalPrice) : "{{totalPrice}}",
-        meetingPoint: "{{meetingPoint}}",
-        pickupInstructions: "{{pickupInstructions}}",
-        tourGuidelines: "{{tourGuidelines}}",
-        thingsToBring: "{{thingsToBring}}",
-        website: "{{website}}",
-        supportEmail: "{{supportEmail}}",
-        supportPhone: "{{supportPhone}}",
+        website: "wildvista.com",
+        supportEmail: "support@wildvista.com",
+        supportPhone: "+92 300 1234567",
     };
 };
 
@@ -387,10 +382,8 @@ export const buildTicketDocument = (doc, booking) => {
 
     drawRoundedCard(doc, MARGIN, currentY, CONTENT_WIDTH - 250, finalCardHeight, TICKET_COLORS.card, TICKET_COLORS.border, 12);
     drawSectionHeading(doc, MARGIN + 12, currentY + 12, "Important Information");
-    doc.font("Helvetica").fontSize(9).fillColor(TICKET_COLORS.dark).text(`Meeting Point: ${ticket.meetingPoint}`, MARGIN + 12, currentY + 42, { width: CONTENT_WIDTH - 280 });
-    doc.text(`Pickup Instructions: ${ticket.pickupInstructions}`, MARGIN + 12, currentY + 66, { width: CONTENT_WIDTH - 280 });
-    doc.text(`Tour Guidelines: ${ticket.tourGuidelines}`, MARGIN + 12, currentY + 90, { width: CONTENT_WIDTH - 280 });
-    doc.text(`Things to Bring: ${ticket.thingsToBring}`, MARGIN + 12, currentY + 114, { width: CONTENT_WIDTH - 280 });
+    doc.font("Helvetica").fontSize(9).fillColor(TICKET_COLORS.dark).text(`Please carry valid identification and booking confirmation.`, MARGIN + 12, currentY + 42, { width: CONTENT_WIDTH - 280 });
+    doc.text(`Arrival at the pickup point 15 minutes before the reporting time is required.`, MARGIN + 12, currentY + 60, { width: CONTENT_WIDTH - 280 });
 
     drawRoundedCard(doc, MARGIN + CONTENT_WIDTH - 250 + 12, currentY, 238, finalCardHeight, TICKET_COLORS.white, TICKET_COLORS.border, 12);
     drawSectionHeading(doc, MARGIN + CONTENT_WIDTH - 250 + 24, currentY + 12, "Booking Summary");
@@ -398,7 +391,6 @@ export const buildTicketDocument = (doc, booking) => {
     doc.text(`Children: ${ticket.children}`, MARGIN + CONTENT_WIDTH - 250 + 24, currentY + 50);
     doc.text(`Total Persons: ${ticket.totalPersons}`, MARGIN + CONTENT_WIDTH - 250 + 24, currentY + 66);
     doc.text(`Price Per Adult: ${ticket.pricePerAdult}`, MARGIN + CONTENT_WIDTH - 250 + 24, currentY + 82);
-    doc.text(`Child Discount: ${ticket.childDiscount}`, MARGIN + CONTENT_WIDTH - 250 + 24, currentY + 98);
     doc.font("Helvetica-Bold").fontSize(10).fillColor(TICKET_COLORS.emerald).text(`Total Amount: ${ticket.totalPrice}`, MARGIN + CONTENT_WIDTH - 250 + 24, currentY + 114);
 
     const termsY = currentY + finalCardHeight + finalGap;
